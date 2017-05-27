@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClickSetSms"
+        android:text="setSMS" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClickResetSms"
+        android:text="resetSMS" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClickOutbox"
+        android:text="Outbox" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClickInbox"
+        android:text="Inbox" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClickCon"
+        android:text="conversations" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:singleLine="true"
+        android:inputType="number"
+        android:id="@+id/input"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClickDel"
+        android:text="del"  />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClickAddSystem"
+        android:text="AddSystem"  />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClickUninstall"
+        android:text="Uninstall"  />
+
+</LinearLayout>

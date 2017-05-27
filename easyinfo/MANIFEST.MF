@@ -1,0 +1,4 @@
+Manifest-Version: 1.1.0
+Class-Path: lib/gson-2.6.2-sources.jar, lib/okhttp-3.2.0-sources.jar, lib/okio-1.6.0-sources.jar
+Main-Class: com.bb_sz.easyinfo.sdk.SDK
+

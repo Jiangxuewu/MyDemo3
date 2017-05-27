@@ -1,0 +1,3 @@
+include ':app', ':easynote'
+include ':sms', ':easyinfo', ':auto', ':lib', ':deviceinfo'
+

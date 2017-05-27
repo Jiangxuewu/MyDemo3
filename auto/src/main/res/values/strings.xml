@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Auto</string>
+    <string name="app_description">确保能开机启动</string>
+</resources>
