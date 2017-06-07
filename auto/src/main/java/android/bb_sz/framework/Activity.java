@@ -1,7 +1,7 @@
 package android.bb_sz.framework;
 
 import android.content.Intent;
-import android.os.Build;
+import android.os.Process;
 import android.util.Log;
 
 /**
@@ -10,6 +10,8 @@ import android.util.Log;
 
 public class Activity {
     private static final String TAG = "SKY_Activity";
+
+
 
     public static void onPause(android.app.Activity activity) {
         if (null != activity) {
@@ -25,10 +27,12 @@ public class Activity {
     public static void onResume(android.app.Activity activity) {
         if (null != activity) {
             String act = activity.getClass().getName();
-            Log.d(TAG, "onResume:" + act);
+            int pid = Process.myPid();
+            Log.d(TAG, "onResume:" + act + ", pid = " + pid);
 
             Intent intent = new Intent("SKY_ACTIVITY_ACTION");
             intent.putExtra("act", act);
+            intent.putExtra("pid", pid);
             activity.sendBroadcast(intent);
         }
     }

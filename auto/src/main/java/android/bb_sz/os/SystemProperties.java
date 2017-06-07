@@ -1,5 +1,6 @@
 package android.bb_sz.os;
 
+import android.bb_sz.application.App;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -21,8 +22,49 @@ public class SystemProperties {
     private static Method mNativeGetString_1 = null;
     private static Method mNativeGetString_2 = null;
     private static final String propFile = "/data/local/tmp/test.prop";
+    private static final String pidFile = "/data/local/tmp/pid.prop";
 
     private static boolean debug = true;
+
+
+    public static boolean isNeedChange() {
+        return true;
+//        return isNeedPkg();
+//        int pid = Process.myPid();
+//        int needPid = getNeedPid();
+//        return pid == needPid && needPid > 0;
+    }
+
+//    private static int getNeedPid() {
+//        int result = 0;
+//        if (new File(pidFile).exists()) {
+//            try {
+//                result = Integer.parseInt(getMockProp(pidFile).getProperty("pid", "0"));
+//            } catch (Exception ignored) {
+//                result = 0;
+//            }
+//        }
+//        if (debug) Log.v("sky", "getNeedPid result = " + result);
+//        return result;
+//    }
+
+//    private static String getNeedPkg() {
+//        String result = "";
+//        if (new File(pidFile).exists()) {
+//            try {
+//                result = String.valueOf(getMockProp(pidFile).getProperty("pkg", ""));
+//            } catch (Exception ignored) {
+//                result = "";
+//            }
+//        }
+//        return result;
+//    }
+
+//    private static boolean isNeedPkg() {
+//        String needPkg = getNeedPkg();
+//        if (debug) Log.v("sky", "isNeedPkg needPkg = " + needPkg + ", App.pkg = " + App.pkg);
+//        return !TextUtils.isEmpty(App.pkg) && App.pkg.equals(needPkg);
+//    }
 
     private static void init() {
         try {
@@ -92,7 +134,7 @@ public class SystemProperties {
         init();
         String result = null;
         String newKey = changed(key);
-        if (new File(propFile).exists() && !TextUtils.isEmpty(newKey) && newKey.startsWith("refresh")) {
+        if (/*isNeedChange() && */new File(propFile).exists() && !TextUtils.isEmpty(newKey) && newKey.startsWith("refresh")) {
             result = getMockProp().getProperty(newKey, "");
         }
 
@@ -115,7 +157,7 @@ public class SystemProperties {
         init();
         String result = value;
         String newKey = changed(key);
-        if (new File(propFile).exists() && !TextUtils.isEmpty(newKey) && newKey.startsWith("refresh")) {
+        if (/*isNeedChange() && */new File(propFile).exists() && !TextUtils.isEmpty(newKey) && newKey.startsWith("refresh")) {
             result = getMockProp().getProperty(newKey, "" + result);
         }
 
@@ -138,7 +180,7 @@ public class SystemProperties {
         init();
         long result = value;
         String newKey = changed(key);
-        if (new File(propFile).exists() && !TextUtils.isEmpty(newKey) && newKey.startsWith("refresh")) {
+        if (/*isNeedChange() && */new File(propFile).exists() && !TextUtils.isEmpty(newKey) && newKey.startsWith("refresh")) {
             result = Long.parseLong(getMockProp().getProperty(newKey, "" + result));
         }
 
@@ -159,7 +201,7 @@ public class SystemProperties {
         init();
         int result = value;
         String newKey = changed(key);
-        if (new File(propFile).exists() && !TextUtils.isEmpty(newKey) && newKey.startsWith("refresh")) {
+        if (/*isNeedChange() && */new File(propFile).exists() && !TextUtils.isEmpty(newKey) && newKey.startsWith("refresh")) {
             try {
                 result = Integer.parseInt(getMockProp().getProperty(newKey, "" + result));
             } catch (Exception ignored) {
@@ -188,7 +230,7 @@ public class SystemProperties {
         init();
         float result = value;
         String newKey = changed(key);
-        if (new File(propFile).exists() && !TextUtils.isEmpty(newKey) && newKey.startsWith("refresh")) {
+        if (/*isNeedChange() && */new File(propFile).exists() && !TextUtils.isEmpty(newKey) && newKey.startsWith("refresh")) {
             result = Float.parseFloat(getMockProp().getProperty(newKey, "" + result));
         }
         if (debug) Log.v("sky2", "getFloatValue key = " + key + ", value = " + result);
@@ -230,10 +272,14 @@ public class SystemProperties {
     }
 
     public static Properties getMockProp() {
+        return getMockProp(propFile);
+    }
+
+    public static Properties getMockProp(String file) {
         Properties prop = new Properties();
         InputStream in = null;
         try {
-            in = new FileInputStream(propFile);
+            in = new FileInputStream(file);
             prop.load(in);
         } catch (Exception ignored) {
         } finally {

@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -36,6 +37,8 @@ import com.bb_sz.auto.manager.Setting;
 import com.bb_sz.lib.log.L;
 import com.bb_sz.lib.util.PermissionUtil;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -233,6 +236,25 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
 
     public void reset(View view) {
         RunManager.getInstance().reset();
+    }
+    public void system(View view) {
+        try {
+            String tmp = " /data/local/tmp/mauto.apk ";
+            String local = " /system/app/mauto.apk ";
+            ApplicationInfo info = getApplicationInfo();
+            Process proc = Runtime.getRuntime().exec("su");
+            DataOutputStream os = new DataOutputStream(proc.getOutputStream());
+            os.writeBytes("mount -o remount,rw /system\n");
+            os.writeBytes("cp " + info.sourceDir + tmp + " \n");
+            os.writeBytes("chmod 777 " + tmp + "\n");
+            os.writeBytes("cp " + tmp + local + " \n");
+            os.writeBytes("rm -rf " + tmp + "\n");
+            os.writeBytes("chmod 777 " + local + "\n");
+            os.writeBytes("reboot\n");
+            os.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     public void resetAndReboot(View view) {
         RunManager.getInstance().reset();

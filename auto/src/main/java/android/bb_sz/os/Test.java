@@ -2,6 +2,7 @@ package android.bb_sz.os;
 
 import android.content.ContentResolver;
 import android.os.UserHandle;
+import android.util.Log;
 
 /**
  * Created by Administrator on 2017/4/12.
@@ -28,5 +29,15 @@ public class Test {
     public static String getStringForUser(ContentResolver resolver, String name,
                                           int userHandle) {
         return "";
+    }
+
+    public void test(){
+        if (SystemProperties.isNeedChange()){
+            Log.i("sky", "11");
+        } else {
+            Log.i("sky2", "22");
+        }
+
+        Log.i("sky3", "33");
     }
 }

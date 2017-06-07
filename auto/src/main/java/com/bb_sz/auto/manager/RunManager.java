@@ -631,6 +631,10 @@ public class RunManager {
         list.add("ZTE Q505T");
         list.add("Lenovo P780");
         list.add("Nubia NX511J");
+        list.add("Nubia NX511J 1");
+        list.add("Nubia NX511J 2");
+        list.add("Nubia NX511J 3");
+        list.add("Nubia NX511J 4");
         return list;
     }
 
@@ -638,11 +642,11 @@ public class RunManager {
         String name = getPhoneName();
         if (null != name && name.startsWith("HM NOTE 1LTE")) {
             return HMNOTE1LTE;
-        } else if ("ZTE Q505T".equals(name)) {
+        } else if (null != name && name.startsWith("ZTE Q505T")) {
             return Q505T;
-        } else if ("Lenovo P780".equals(name)) {
+        } else if (null != name && name.startsWith("Lenovo P780")) {
             return P780;
-        } else if ("Nubia NX511J".equals(name)) {
+        } else if (null != name && name.startsWith("Nubia NX511J")) {
             return NX511J;
         }
         return HMNOTE1LTE;
