@@ -119,7 +119,7 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
     boolean isRun = false;
 
     private void unlockScreen() {
-        if (RunManager.getInstance().getSelPhoneType() != RunManager.NX511J) {
+        if (RunManager.getInstance().getSelPhoneType() != RunManager.NX511J/* && RunManager.getInstance().getSelPhoneType() != RunManager.HMNOTE1LTE*/) {
             return;
         }
         isRun = true;
@@ -152,8 +152,8 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
                             e.printStackTrace();
                         }
                         onStart();
-                    } else if (RunManager.getInstance().getSelPhoneType() == RunManager.HMNOTE1LTE) {
-                        String[] cmd = {"input tap 141 645", "input tap 358 662", "input tap 566 667", "input tap 145 883", "input tap 559 1123"};
+                    } else if (null != cur && cur.equals("com.bb_sz.auto.RunActivity") && System.currentTimeMillis() - start > 1000 * 10 && RunManager.getInstance().getSelPhoneType() == RunManager.HMNOTE1LTE) {
+                        String[] cmd = {"input swipe 500 1000 500 500", "input tap 144 618", "input tap 361 630", "input tap 585 620", "input tap 145 883", "input tap 150 770"};
                         CMD.doSuExec(cmd);
                         isRun = false;
                         try {
@@ -170,6 +170,7 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
                                 "pm clear " + ShHelper.qihooPkg
                         };
                         CMD.doSuExec(cmds);
+                        onStart();
                     }
                 }
             }
@@ -235,6 +236,7 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
     }
 
     public void reset(View view) {
+//        CMD.doSuExec("pm install /sdcard/TM/tgllk.apk");
         RunManager.getInstance().reset();
     }
     public void system(View view) {
@@ -572,7 +574,7 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
     }
 
     private void connectVpn() {
-        VPNHelper.getInstance().login("混合", "e2701", "00");
+        VPNHelper.getInstance().login("混合", "e0832", "852");
     }
 
     private void addVpn(Context context) {
@@ -603,5 +605,11 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        home();
+//        super.onBackPressed();
     }
 }

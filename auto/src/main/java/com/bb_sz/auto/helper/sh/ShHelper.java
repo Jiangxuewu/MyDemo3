@@ -258,15 +258,18 @@ public class ShHelper {
                         input(206, 1230);
                     }
                     appPageStartTime = 0;
-                    if (downTimeCount > 5) {// 下载超时，算成功
+                    if (downTimeCount > 3) {// 下载超时，算成功
                         CMD.doSuExec("pm install /sdcard/TM/tgllk.apk");
                         sleep(5000);
+
                         // next times
+                        isInstallSuccess = true;
+
                         home(context);
-                        if (null != callback) {
-                            callback.result(1, "success, downTimeout ");
-                        }
-                        return "";
+//                        if (null != callback) {
+//                            callback.result(1, "success, downTimeout ");
+//                        }
+//                        return "";
                     }
                 }
 

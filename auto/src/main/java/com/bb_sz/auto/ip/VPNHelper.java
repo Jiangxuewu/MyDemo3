@@ -115,6 +115,8 @@ public class VPNHelper {
                             CMD.doSuExec("input keyevent 4");
                             Thread.sleep(1000);
                             CMD.doSuExec("input keyevent 4");
+                        } else if ("com.android.settings.Settings$VpnSettingsActivity".equals(cur) && (actionType == ACTION_TYPE_ADD_VPN) && RunManager.getInstance().getSelPhoneType() == RunManager.HMNOTE1LTE){
+                            CMD.doSuExec("input tap 368 1184");
                         }
                     } catch (InterruptedException ignored) {
                     }

@@ -12,6 +12,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
     private static final String TAG = "AutoAccess";
     private static final String ACT_ADD_SET = "com.android.settings/.Settings$VpnSettingsActivity";
     private static final String ACT_ADD_SET2 = "com.android.settings.vpn2.VpnDialog";
+    private static final String ACT_ADD_SET_HM = "com.android.settings/.SubSettings";
 
     private final boolean debug = true;
 
@@ -68,11 +70,17 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
 //                    return;
 //                }
 //                VPNHelper.getInstance().STATE_RUN = VPNHelper.RUN_RUNING;
-                if (ACT_ADD_SET.equals(currentActivityName) || ACT_ADD_SET2.equals(currentActivityName)) {
+                if (ACT_ADD_SET.equals(currentActivityName) || ACT_ADD_SET2.equals(currentActivityName) || ACT_ADD_SET_HM.equals(currentActivityName)) {
                     switch (VPNHelper.getInstance().actionType) {
                         case VPNHelper.ACTION_TYPE_ADD_VPN:
                             //add vpn info
-                            editVpnConfigFile(event, VPNHelper.getInstance().name, VPNHelper.getInstance().server);
+                            if (RunManager.getInstance().getSelPhoneType() == RunManager.HMNOTE1LTE) {
+                                if (ACT_ADD_SET_HM.equals(currentActivityName)) {
+                                    editVpnConfigFile(event, VPNHelper.getInstance().name, VPNHelper.getInstance().server);
+                                }
+                            } else {
+                                editVpnConfigFile(event, VPNHelper.getInstance().name, VPNHelper.getInstance().server);
+                            }
                             break;
                         case VPNHelper.ACTION_TYPE_LOGIN:
                             //login
@@ -138,8 +146,16 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
             if (null != item) {
                 cls = (String) item.getClassName();
                 if (debug) L.d(TAG, "clickItemList, cls = " + cls);
-                if (TextView.class.getName().equals(cls)) {
-                    item.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                if (RunManager.getInstance().getSelPhoneType() == RunManager.HMNOTE1LTE) {
+                    if (CheckedTextView.class.getName().equals(cls)) {
+                        if (debug)
+                            L.d(TAG, "clickItemList, item.getParent() cls = " + item.getParent());
+                        item.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    }
+                } else {
+                    if (TextView.class.getName().equals(cls)) {
+                        item.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    }
                 }
             }
         }
@@ -156,6 +172,8 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void clickVpnCreate(AccessibilityEvent event, String id) {
+        if (debug)
+            L.d(TAG, "clickVpnCreate,id = " + id);
         AccessibilityNodeInfo eventSource = event.getSource();
         if (null == eventSource) return;
         List<AccessibilityNodeInfo> listName = eventSource.findAccessibilityNodeInfosByViewId(id);
@@ -178,6 +196,11 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
     private void loginVpn(AccessibilityEvent event, String userName, String password) {
         if (debug)
             L.v(TAG, "add loginVpn STATE_VPN_LOGIN = " + VPNHelper.getInstance().STATE_VPN_LOGIN);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         AccessibilityNodeInfo eventSource = event.getSource();
         if (null == eventSource) return;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 && VPNHelper.getInstance().STATE_VPN_LOGIN == VPNHelper.NONE) {
@@ -186,21 +209,23 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
             //VPNHelper.getInstance().name
             clickItemList(event, VPNHelper.getInstance().name);
 
-            // set userName
-            setEditContent(eventSource, "com.android.settings:id/username", userName);
-            // set password
-            setEditContent(eventSource, "com.android.settings:id/password", password);
-            //set 保存账号信息
-            if (RunManager.getInstance().getSelPhoneType() != RunManager.P780)
-                setCheckBoxClick(eventSource, "com.android.settings:id/save_login");
+            if (RunManager.getInstance().getSelPhoneType() != RunManager.HMNOTE1LTE) {
+                // set userName
+                setEditContent(eventSource, "com.android.settings:id/username", userName);
+                // set password
+                setEditContent(eventSource, "com.android.settings:id/password", password);
+                //set 保存账号信息
+                if (RunManager.getInstance().getSelPhoneType() != RunManager.P780)
+                    setCheckBoxClick(eventSource, "com.android.settings:id/save_login");
+            }
+
             // 连接
-            if (RunManager.getInstance().getSelPhoneType() == RunManager.P780) {
+            if (RunManager.getInstance().getSelPhoneType() == RunManager.P780 ) {
                 if (usernameFlag && passwordFlag)
                     setButtonClick(eventSource, "连接");
             } else {
                 setButtonClick(eventSource, "连接");
             }
-
 
             if (VPNHelper.getInstance().STATE_VPN_LOGIN == VPNHelper.LOGIN_ING) {
                 VPNHelper.getInstance().STATE_VPN_LOGIN = VPNHelper.NONE;
@@ -228,7 +253,11 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
 //            }
             //click vpn_create
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                clickVpnCreate(event, "com.android.settings:id/vpn_create");
+                if (RunManager.getInstance().getSelPhoneType() == RunManager.HMNOTE1LTE) {
+//                    clickVpnCreate(event, "com.android.settings:id/vpn_add");
+                } else {
+                    clickVpnCreate(event, "com.android.settings:id/vpn_create");
+                }
             }
             // set name
             setEditContent(eventSource, "com.android.settings:id/name", name);
@@ -260,7 +289,7 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
 
     private void toActivity() {
 //        VPNHelper.getInstance().getActivity().startActivity(new Intent(VPNHelper.getInstance().getActivity(), RunActivity.class));
-        CMD.doSuExec("input keyevent 4");
+//        CMD.doSuExec("input keyevent 4");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)

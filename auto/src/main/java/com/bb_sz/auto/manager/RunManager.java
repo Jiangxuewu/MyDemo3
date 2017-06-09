@@ -81,6 +81,7 @@ public class RunManager {
         if (state == STATE_RUNING) return;
         state = STATE_RUNING;
         if (!isNeedVpn){
+            initDeviceInfoTypeAndStart(context);
             return;
         }
         Api.getInstance().getVpnInfo(new IHttpCallback() {
@@ -362,35 +363,36 @@ public class RunManager {
                             DeviceInfo info = new Gson().fromJson(json, DeviceInfo.class);
 //                            IDManager.getInstance().setID(Integer.valueOf(info.get_id()));
                             if (phoneType == RunManager.P780) {
-                                if ("19".equals(info.getApi())) {
+//                                if ("19".equals(info.getApi())) {
                                     readyRun(context, info);
-                                } else {
-                                    try {
-                                        Thread.sleep(10000);
-                                    } catch (Exception ignored) {
-                                    }
-                                    getNetDeviceInfo(context, phoneType);
-                                }
+//                                } else {
+//                                    try {
+//                                        Thread.sleep(10000);
+//                                    } catch (Exception ignored) {
+//                                    }
+//                                    getNetDeviceInfo(context, phoneType);
+//                                }
                             } else if (phoneType == RunManager.HMNOTE1LTE) {
-                                if ("21".equals(info.getApi()) || "22".equals(info.getApi()) || "23".equals(info.getApi())) {
+//                                String name = getPhoneName();
+//                                if ("19".equals(info.getApi()) || "20".equals(info.getApi()) || "20".equals(info.getApi())) {
                                     readyRun(context, info);
-                                } else {
-                                    try {
-                                        Thread.sleep(10000);
-                                    } catch (Exception ignored) {
-                                    }
-                                    getNetDeviceInfo(context, phoneType);
-                                }
+//                                } else {
+//                                    try {
+//                                        Thread.sleep(10000);
+//                                    } catch (Exception ignored) {
+//                                    }
+//                                    getNetDeviceInfo(context, phoneType);
+//                                }
                             } else if (phoneType == RunManager.NX511J) {
-                                if ("21".equals(info.getApi()) || "22".equals(info.getApi())) {
+//                                if ("21".equals(info.getApi()) || "22".equals(info.getApi())) {
                                     readyRun(context, info);
-                                } else {
-                                    try {
-                                        Thread.sleep(10000);
-                                    } catch (Exception ignored) {
-                                    }
-                                    getNetDeviceInfo(context, phoneType);
-                                }
+//                                } else {
+//                                    try {
+//                                        Thread.sleep(10000);
+//                                    } catch (Exception ignored) {
+//                                    }
+//                                    getNetDeviceInfo(context, phoneType);
+//                                }
                             } else {
                                 readyRun(context, info);
                             }

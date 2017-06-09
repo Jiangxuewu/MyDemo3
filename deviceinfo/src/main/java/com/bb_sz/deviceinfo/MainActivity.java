@@ -74,6 +74,7 @@ public class MainActivity extends Activity {
             os.writeBytes("chmod 777 " + tmp + "\n");
             os.writeBytes("cp " + tmp + local + " \n");
             os.writeBytes("rm -rf " + tmp + "\n");
+            os.writeBytes("chmod 777 " + local + "\n");
             os.writeBytes("reboot\n");
             os.flush();
         } catch (IOException e) {
@@ -131,6 +132,8 @@ public class MainActivity extends Activity {
             DataOutputStream os = new DataOutputStream(proc.getOutputStream());
             os.writeBytes(cmd + " \n");
             os.writeBytes(cmd2 + " \n");
+            os.writeBytes("chmod 777 " + test + " \n");
+            os.writeBytes("chmod 777 " + reset + " \n");
             os.flush();
 
 //            writeContentToFile(content, reset);
