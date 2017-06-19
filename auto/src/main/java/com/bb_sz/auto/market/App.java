@@ -27,6 +27,11 @@ public class App {
     public long run_blank = 250;//循环读取当前页面的间隔， 单位毫秒
     public int install_ready_time = 5;//安装等待时间， 单位秒
     public int open_ready_time = 5;//安装后启动app等待时间，单位秒
+    public int qh360type;
+    public String qh360typekey;//
+    public int qh360typeindex;
+    public int down_times;
+    public String local_name;
 
     @Override
     public String toString() {
@@ -54,6 +59,11 @@ public class App {
         sb.append("install_ready_time").append(":").append(install_ready_time).append("\n");
         sb.append("open_ready_time").append(":").append(open_ready_time).append("\n");
         sb.append("m_type").append(":").append(m_type).append("\n");
+        sb.append("qh360type").append(":").append(qh360type).append("\n");
+        sb.append("qh360typekey").append(":").append(qh360typekey).append("\n");
+        sb.append("qh360typeindex").append(":").append(qh360typeindex).append("\n");
+        sb.append("local_name").append(":").append(local_name).append("\n");
+        sb.append("down_times").append(":").append(down_times).append("\n");
         sb.append("}");
         return sb.toString();
     }

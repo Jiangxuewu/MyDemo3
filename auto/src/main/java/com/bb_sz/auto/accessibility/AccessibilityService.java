@@ -54,7 +54,6 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
                     getPackageManager().getActivityInfo(componentName, 0);
                     currentActivityName = componentName.flattenToShortString();
                 } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
                     currentActivityName = event.getClassName().toString();
                 }
                 L.d(TAG, "watchList,...currentActivityName is " + currentActivityName);

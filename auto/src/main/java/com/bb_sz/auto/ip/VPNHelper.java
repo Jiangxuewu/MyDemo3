@@ -90,7 +90,7 @@ public class VPNHelper {
             public void run() {
                 while (true) {
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(3000);
                         String cur = CheckHelp.getInstance().getCurrentActivityName(mContext);
                         if ("com.android.settings.vpn2.VpnSettingsAddActivity".equals(cur) && (actionType == ACTION_TYPE_ADD_VPN)) {//add
                             if (RunManager.getInstance().getSelPhoneType() == RunManager.NX511J) {

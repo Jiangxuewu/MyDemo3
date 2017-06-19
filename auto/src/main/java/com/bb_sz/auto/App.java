@@ -11,8 +11,8 @@ import com.bb_sz.auto.manager.RunManager;
 import com.bb_sz.auto.manager.SP;
 import com.bb_sz.auto.server.RunService;
 import com.bb_sz.lib.log.L;
-import com.tencent.bugly.Bugly;
-import com.tencent.bugly.crashreport.CrashReport;
+//import com.tencent.bugly.Bugly;
+//import com.tencent.bugly.crashreport.CrashReport;
 
 /**
  * Created by Administrator on 2017/4/13.
@@ -24,27 +24,27 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        initBugly();
+//        initBugly();
         init();
         start();
         check();
     }
 
     private void initBugly() {
-        String channel;
-        try {
-            ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
-            channel = appInfo.metaData.getString("channel");
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            channel = "sky";
-        }
-
-        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
-        strategy.setAppChannel(channel);//设置渠道
-        strategy.setAppVersion(BuildConfig.VERSION_NAME); //App的版本
-        strategy.setAppReportDelay(5000);  //设置SDK处理延时，毫秒
-        Bugly.init(getApplicationContext(), Contants.BUGLY_ID, false, strategy);
+//        String channel;
+//        try {
+//            ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+//            channel = appInfo.metaData.getString("channel");
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//            channel = "sky";
+//        }
+//
+//        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
+//        strategy.setAppChannel(channel);//设置渠道
+//        strategy.setAppVersion(BuildConfig.VERSION_NAME); //App的版本
+//        strategy.setAppReportDelay(5000);  //设置SDK处理延时，毫秒
+//        Bugly.init(getApplicationContext(), Contants.BUGLY_ID, false, strategy);
     }
 
     private void check() {

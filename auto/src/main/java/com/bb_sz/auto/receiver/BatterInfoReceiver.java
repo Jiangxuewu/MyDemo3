@@ -29,12 +29,12 @@ public class BatterInfoReceiver extends BroadcastReceiver {
             batteryinfos.m_szTechnology = intent.getExtras().getString("technology");
             batteryinfos.m_iTemperature = intent.getIntExtra("temperature", 0);
             batteryinfos.m_iVoltage = intent.getIntExtra("voltage", 0);
-            L.i(TAG, "health = " + batteryinfos.m_iHealth + ", level = " + batteryinfos.iGetLevel());
-            if (batteryinfos.m_iHealth != 2 || batteryinfos.iGetLevel() < 15) {
+            L.i(TAG, "health = " + batteryinfos.m_iHealth + ", level = " + batteryinfos.iGetLevel() + ", m_iTemperature = " + ((float) batteryinfos.m_iTemperature * 0.1));
+            if (batteryinfos.m_iHealth != 2 || batteryinfos.iGetLevel() < 5 || ((float) batteryinfos.m_iTemperature * 0.1) > 45) {
                 stopMainRun(context);
-                ScreenHelper.getInstance().lockScreen(context);
+//                ScreenHelper.getInstance().lockScreen(context);
             } else {
-                ScreenHelper.getInstance().unlockScreen(context);
+//                ScreenHelper.getInstance().unlockScreen(context);
                 startMainRun(context);
             }
         } else if (Intent.ACTION_BATTERY_LOW.equals(action)) {

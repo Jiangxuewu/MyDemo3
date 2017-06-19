@@ -70,6 +70,8 @@ public class RunManager {
     }
 
     private RunManager() {
+        isNeedVpn = getSelPhoneType() == NX511J;
+        isNeedVpn = false;
     }
 
 
@@ -80,7 +82,8 @@ public class RunManager {
         L.d(TAG, "start() state = " + state);
         if (state == STATE_RUNING) return;
         state = STATE_RUNING;
-        if (!isNeedVpn){
+        if (!isNeedVpn) {
+//            checkIpAndStart(context);
             initDeviceInfoTypeAndStart(context);
             return;
         }
@@ -99,7 +102,9 @@ public class RunManager {
                                 SP.getInstance().setStringValue(Contants.VPN_PASSWORD, vpnInfo.password);
                                 if (!vpnInfo.name.equals(getVpnName())) {
                                     SP.getInstance().setStringValue(Contants.VPN_NAME, vpnInfo.name);
-                                    VPNHelper.getInstance().addVpn(context, vpnInfo.name, vpnInfo.server);
+                                    if (isNeedVpn) {
+                                        VPNHelper.getInstance().addVpn(context, vpnInfo.name, vpnInfo.server);
+                                    }
                                 }
                             }
                         }
@@ -146,7 +151,9 @@ public class RunManager {
                                     loginVpnAndStart(context);
                                     return;
                                 } else {
-                                    VPNHelper.getInstance().logout(getVpnName());
+                                    if (isNeedVpn) {
+                                        VPNHelper.getInstance().logout(getVpnName());
+                                    }
                                     try {
                                         Thread.sleep(1000 * 9);
                                     } catch (InterruptedException ignored) {
@@ -174,13 +181,13 @@ public class RunManager {
 
     private String curIp = "210.79.81.18";
 
-    private boolean isNeedChangeIP(String ip) {
-        L.d(TAG, "isNeedChangeIP ip = " + ip);
+    private boolean isIPChange(String ip) {
+        L.d(TAG, "isIPChange ip = " + ip);
         boolean res = curIp.equals(ip);
+        curIp = ip;
         if (res) {
             return true;
         } else {
-            curIp = ip;
             return false;
         }
     }
@@ -191,7 +198,9 @@ public class RunManager {
             @Override
             public void run() {
                 //check ip
-                VPNHelper.getInstance().login(getVpnName(), getUserName(), getPassword());
+                if (isNeedVpn) {
+                    VPNHelper.getInstance().login(getVpnName(), getUserName(), getPassword());
+                }
                 try {
                     Thread.sleep(1000 * 10);
                 } catch (InterruptedException ignored) {
@@ -201,7 +210,10 @@ public class RunManager {
         }).start();
     }
 
+    int checkIpTimes = 0;
+
     private void checkIpAndStart(final Context context) {
+        checkIpTimes++;
         Api.getInstance().getIp(new IHttpCallback() {
             @Override
             public void result(HttpResponse httpResponse) {
@@ -213,7 +225,7 @@ public class RunManager {
                             L.d(TAG, "checkIpAndStart str = " + str);
                             IP ip = new Gson().fromJson(str, IP.class);
                             if (null != ip) {
-                                if (!isNeedChangeIP(ip.ip)) {
+                                if (!isIPChange(ip.ip)) {
                                     try {
                                         Thread.sleep(1000 * 6);
                                     } catch (InterruptedException ignored) {
@@ -221,13 +233,29 @@ public class RunManager {
                                     initDeviceInfoTypeAndStart(context);
                                     return;
                                 } else {
-                                    checkVPNAndStart(context);
+                                    if (isNeedVpn)
+                                        checkVPNAndStart(context);
+                                    else{
+                                        try {
+                                            Thread.sleep(1000 * 10);
+                                        } catch (InterruptedException ignored) {
+                                        }
+                                        checkIpAndStart(context);
+                                    }
                                     return;
                                 }
                             }
                         }
                     }
                     return;
+                }
+                try {
+                    Thread.sleep(1000 * 10);
+                } catch (InterruptedException ignored) {
+                }
+                if (checkIpTimes % 5 == 0) {
+                    checkIpTimes = 0;
+                    initDeviceInfoTypeAndStart(context);
                 }
                 checkIpAndStart(context);
             }
@@ -261,7 +289,7 @@ public class RunManager {
                 }
                 try {
                     Thread.sleep(10000);
-                    start(context);
+                    initDeviceInfoTypeAndStart(context);
                 } catch (InterruptedException ignored) {
                 }
             }
@@ -319,9 +347,6 @@ public class RunManager {
      * @param context
      */
     private void getDeviceInfoType(final Context context, final boolean test, IHttpCallback callback) {
-        //switch ip
-//        VPNHelper.getInstance().switchIP("湖南-郴州-电信1", "czz.8866.org");
-
         //get data type
         Api.getInstance().getDataType(callback);
     }
@@ -364,7 +389,7 @@ public class RunManager {
 //                            IDManager.getInstance().setID(Integer.valueOf(info.get_id()));
                             if (phoneType == RunManager.P780) {
 //                                if ("19".equals(info.getApi())) {
-                                    readyRun(context, info);
+                                readyRun(context, info);
 //                                } else {
 //                                    try {
 //                                        Thread.sleep(10000);
@@ -375,7 +400,7 @@ public class RunManager {
                             } else if (phoneType == RunManager.HMNOTE1LTE) {
 //                                String name = getPhoneName();
 //                                if ("19".equals(info.getApi()) || "20".equals(info.getApi()) || "20".equals(info.getApi())) {
-                                    readyRun(context, info);
+                                readyRun(context, info);
 //                                } else {
 //                                    try {
 //                                        Thread.sleep(10000);
@@ -385,7 +410,7 @@ public class RunManager {
 //                                }
                             } else if (phoneType == RunManager.NX511J) {
 //                                if ("21".equals(info.getApi()) || "22".equals(info.getApi())) {
-                                    readyRun(context, info);
+                                readyRun(context, info);
 //                                } else {
 //                                    try {
 //                                        Thread.sleep(10000);
@@ -589,7 +614,7 @@ public class RunManager {
                 if (code == 0) {
                     L.e(TAG, "sh result:" + msg);
                     start(context);
-                } else if (code == 1){
+                } else if (code == 1) {
                     L.e(TAG, "sh result:" + msg);
                     start(context);
                 } else {

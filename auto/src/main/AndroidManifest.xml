@@ -70,13 +70,13 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.BatterInfoReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BATTERY_CHANGED" />
-                <action android:name="android.intent.action.BATTERY_LOW" />
-                <action android:name="android.intent.action.BATTERY_OKAY" />
-            </intent-filter>
-        </receiver>
+        <!--<receiver android:name=".receiver.BatterInfoReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BATTERY_CHANGED" />-->
+                <!--<action android:name="android.intent.action.BATTERY_LOW" />-->
+                <!--<action android:name="android.intent.action.BATTERY_OKAY" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
         <!--bugly start-->
         <activity

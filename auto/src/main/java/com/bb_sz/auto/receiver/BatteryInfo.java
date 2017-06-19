@@ -8,11 +8,11 @@ public class BatteryInfo {
     public boolean m_bPresent = false;
     public int m_iHealth = -1;
     public int m_iLevel = -1;
-    public int m_iPlugged = -1;
+    public int m_iPlugged = -1;//充电方式：　BatteryManager.BATTERY_PLUGGED_AC：AC充电。　BatteryManager.BATTERY_PLUGGED_USB：USB充电。
     public int m_iScale = -1;
     public int m_iStatus = -1;
-    public int m_iTemperature = -1;
-    public int m_iVoltage = -1;
+    public int m_iTemperature = -1;//得到电池的温度,0.1度单位。例如 表示197的时候，意思为19.7度
+    public int m_iVoltage = -1;//电池的电压
     public String m_szTechnology = "";
 
 

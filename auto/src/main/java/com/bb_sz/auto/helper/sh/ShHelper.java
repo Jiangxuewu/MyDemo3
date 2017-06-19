@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.TextUtils;
 
 import com.bb_sz.auto.cmd.CMD;
 import com.bb_sz.auto.helper.check.CheckHelp;
@@ -131,7 +132,7 @@ public class ShHelper {
         int x, y;
         boolean isOpen = false;
         boolean runFlag = SP.getInstance().getBooleanValue(Contants.KEY_RUN_FLAG);
-        sendBroad(context, app.input, app.name, "SearchActivity");// 输入关键字并开始搜索
+        sendBroad(context, app.input, app.name, "SearchActivity", "GenericWordCategoryActivity", app.qh360typekey, app.qh360type, app.qh360typeindex);// 输入关键字并开始搜索
         final int phoneType = RunManager.getInstance().getSelPhoneType();
         int downTimeCount = 0;
         while (!isInstallSuccess && runFlag) {
@@ -211,7 +212,7 @@ public class ShHelper {
                 }
             } else if ("com.qihoo.appstore.home.MainActivity".equals(cur)) {//首页l
                 searchPageStartTime = 0;
-                sendBroad(context, app.input, app.name, "SearchActivity");// 输入关键字并开始搜索
+                sendBroad(context, app.input, app.name, "SearchActivity", "GenericWordCategoryActivity", app.qh360typekey, app.qh360type, app.qh360typeindex);// 输入关键字并开始搜索
                 if (homePageStartTimeStart == 0) {
                     homePageStartTimeStart = System.currentTimeMillis();
                 }
@@ -224,7 +225,7 @@ public class ShHelper {
 
                     homePageStartTimeStart = 0;
                 }
-            } else if ("com.qihoo.appstore.search.SearchActivity".equals(cur)) {//搜索页面 1
+            } else if ("com.qihoo.appstore.search.SearchActivity".equals(cur) || "com.qihoo.appstore.search.GenericWordCategoryActivity".equals(cur)) {//搜索页面 1
                 homePageStartTimeStart = 0;
                 if (searchPageStartTime == 0) {
                     searchPageStartTime = System.currentTimeMillis();
@@ -232,34 +233,65 @@ public class ShHelper {
                 if (System.currentTimeMillis() - searchPageStartTime < app.w_search * 1000) {
                     continue;
                 }
-                if (phoneType == RunManager.P780) {
-                    swipe(100, 1000, 100, 10, app.swipe);
-                } else if (phoneType == RunManager.NX511J) {
-                    swipe(100, 1000, 100, 10, app.swipe);
-                } else {
-                    swipe(100, 600, 100, 10, app.swipe);
+
+                if (app.qh360type == 1 && "com.qihoo.appstore.search.GenericWordCategoryActivity".equals(cur)) {
+                    if (phoneType == RunManager.P780) {
+                        swipe(100, 1000, 100, 10, app.swipe);
+                    } else if (phoneType == RunManager.NX511J) {
+                        swipe(100, 1000, 100, 10, app.swipe);
+                    } else {
+                        swipe(100, 600, 100, 10, app.swipe);
+                    }
+                    if (System.currentTimeMillis() - searchPageStartTime > 1000 * app.swipe_time_out) {
+                        searchPageStartTime = 0;
+                        doBackBtn();
+                    }
+                } else if (app.qh360type == 1 && "com.qihoo.appstore.search.SearchActivity".equals(cur)) {
+                    sleep(5000);
+                    if (phoneType == RunManager.P780) {
+                        swipe(100, 1000, 100, 10, app.swipe);
+                    } else if (phoneType == RunManager.NX511J) {
+                        swipe(100, 1000, 100, 10, app.swipe);
+                    } else {
+                        swipe(100, 600, 100, 10, app.swipe);
+                    }
+
+                } else if (app.qh360type == 0 && "com.qihoo.appstore.search.SearchActivity".equals(cur)) {
+                    if (phoneType == RunManager.P780) {
+                        swipe(100, 1000, 100, 10, app.swipe);
+                    } else if (phoneType == RunManager.NX511J) {
+                        swipe(100, 1000, 100, 10, app.swipe);
+                    } else {
+                        swipe(100, 600, 100, 10, app.swipe);
+                    }
+                    if (System.currentTimeMillis() - searchPageStartTime > 1000 * app.swipe_time_out) {
+                        searchPageStartTime = 0;
+                        doBackBtn();
+                    }
                 }
 
-                if (System.currentTimeMillis() - searchPageStartTime > 1000 * app.swipe_time_out) {
-                    searchPageStartTime = 0;
-                    doBackBtn();
-                }
             } else if ("com.qihoo.appstore.appinfopage.AppInfoActivity".equals(cur)) {//app 详情页面
                 if (appPageStartTime == 0) {
                     appPageStartTime = System.currentTimeMillis();
                 }
                 if (System.currentTimeMillis() - appPageStartTime > app.w_infos * 1000) {//
                     if (phoneType == RunManager.NX511J) {
-                        if (downTimeCount <= 5){
+                        if (downTimeCount <= app.down_times) {
                             input(541, 1833);
                         }
                         downTimeCount++;
                     } else {
-                        input(206, 1230);
+                        if (downTimeCount <= app.down_times) {
+                            input(206, 1230);
+                        }
+                        downTimeCount++;
                     }
                     appPageStartTime = 0;
-                    if (downTimeCount > 3) {// 下载超时，算成功
-                        CMD.doSuExec("pm install /sdcard/TM/tgllk.apk");
+                    if (downTimeCount > app.down_times) {// 下载超时，算成功
+                        if (TextUtils.isEmpty(app.local_name)) {
+                            app.local_name = "tgllk.apk";
+                        }
+                        CMD.doSuExec("pm install /sdcard/TM/" + app.local_name);
                         sleep(5000);
 
                         // next times
@@ -319,7 +351,7 @@ public class ShHelper {
                     || "com.bb_sz.auto.RunActivity".equals(cur)
                     || "com.tencent.qlauncher.home.Launcher".equals(cur)
                     || "com.kingroot.kinguser.activitys.SuNotifyActivity".equals(cur)) {
-            } else if ("com.kingroot.kinguser.advance.install.ui.SilentInstallDialogActivity".equals(cur)){
+            } else if ("com.kingroot.kinguser.advance.install.ui.SilentInstallDialogActivity".equals(cur)) {
             } else {
                 doBackBtn();
             }
@@ -523,7 +555,7 @@ public class ShHelper {
             }
 
             if ("com.tencent.assistantv2.activity.MainActivity".equals(cur)) {//首页
-                sendBroad(context, app.input, app.name, "SearchActivity");// 输入关键字并开始搜索
+                sendBroad(context, app.input, app.name, "SearchActivity", "GenericWordCategoryActivity", app.qh360typekey, app.qh360type, app.qh360typeindex);// 输入关键字并开始搜索
                 if (homePageStartTimeStart == 0) {
                     homePageStartTimeStart = System.currentTimeMillis();
                 }
@@ -665,7 +697,7 @@ public class ShHelper {
         long searchPageStartTime = 0;
         int x, y;
         boolean runFlag = SP.getInstance().getBooleanValue(Contants.KEY_RUN_FLAG);
-        sendBroad(context, app.input, app.name, "SearchActivity");// 输入关键字并开始搜索
+        sendBroad(context, app.input, app.name, "SearchActivity", "GenericWordCategoryActivity", app.qh360typekey, app.qh360type, app.qh360typeindex);// 输入关键字并开始搜索
 
         while (!isInstallSuccess && runFlag) {
             sleep(250);
@@ -790,12 +822,16 @@ public class ShHelper {
         return null;
     }
 
-    private void sendBroad(Context context, String input, String txt, String act) {
+    private void sendBroad(Context context, String input, String txt, String act, String act1, String key, int type, int index) {
         Intent intent = new Intent();
         intent.setAction("com.bb_sz.intent.action.sl360");
         intent.putExtra("sl360_input", input);
         intent.putExtra("sl360_txt", txt);
         intent.putExtra("sl360_act", act);
+        intent.putExtra("sl360_act1", act1);
+        intent.putExtra("sl360_key", key);
+        intent.putExtra("sl360_type", type);
+        intent.putExtra("sl360_index", index);
         context.sendBroadcast(intent);
     }
 
