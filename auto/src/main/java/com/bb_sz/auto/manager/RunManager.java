@@ -83,8 +83,8 @@ public class RunManager {
         if (state == STATE_RUNING) return;
         state = STATE_RUNING;
         if (!isNeedVpn) {
-//            checkIpAndStart(context);
-            initDeviceInfoTypeAndStart(context);
+            checkIpAndStart(context);
+//            initDeviceInfoTypeAndStart(context);
             return;
         }
         Api.getInstance().getVpnInfo(new IHttpCallback() {
@@ -183,13 +183,14 @@ public class RunManager {
 
     private boolean isIPChange(String ip) {
         L.d(TAG, "isIPChange ip = " + ip);
-        boolean res = curIp.equals(ip);
-        curIp = ip;
-        if (res) {
-            return true;
-        } else {
-            return false;
+        if (TextUtils.isEmpty(ip)) return false;
+        curIp = SP.getInstance().getStringValue(Contants.KEY_CUR_IP);
+        boolean res = null != curIp && !curIp.equals(ip);
+        if (res){
+            curIp = ip;
+            SP.getInstance().setStringValue(Contants.KEY_CUR_IP, ip);
         }
+        return res;
     }
 
     public void loginVpnAndStart(final Context context) {
@@ -225,7 +226,7 @@ public class RunManager {
                             L.d(TAG, "checkIpAndStart str = " + str);
                             IP ip = new Gson().fromJson(str, IP.class);
                             if (null != ip) {
-                                if (!isIPChange(ip.ip)) {
+                                if (isIPChange(ip.ip)) {
                                     try {
                                         Thread.sleep(1000 * 6);
                                     } catch (InterruptedException ignored) {
@@ -253,10 +254,10 @@ public class RunManager {
                     Thread.sleep(1000 * 10);
                 } catch (InterruptedException ignored) {
                 }
-                if (checkIpTimes % 5 == 0) {
-                    checkIpTimes = 0;
-                    initDeviceInfoTypeAndStart(context);
-                }
+//                if (checkIpTimes % 5 == 0) {
+//                    checkIpTimes = 0;
+//                    initDeviceInfoTypeAndStart(context);
+//                }
                 checkIpAndStart(context);
             }
         });

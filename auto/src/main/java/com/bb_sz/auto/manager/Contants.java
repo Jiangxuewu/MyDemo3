@@ -40,4 +40,5 @@ public interface Contants {
     String VPN_PASSWORD = "VPN_PASSWORD";
     String VPN_USER_NAME = "VPN_USER_NAME";
     String VPN_NAME = "VPN_NAME";
+    String KEY_CUR_IP = "KEY_CUR_IP";
 }
