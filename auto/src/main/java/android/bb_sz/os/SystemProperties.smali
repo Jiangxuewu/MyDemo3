@@ -23,9 +23,9 @@
 
 .field private static mNativeGetString_2:Ljava/lang/reflect/Method; = null
 
-.field private static final pidFile:Ljava/lang/String; = "/data/local/tmp/pid.prop"
-
 .field private static final propFile:Ljava/lang/String; = "/data/local/tmp/test.prop"
+
+.field private static final resetPropFile:Ljava/lang/String; = "/data/local/tmp/reset.prop"
 
 
 # direct methods
@@ -51,7 +51,7 @@
     sput-object v0, Landroid/bb_sz/os/SystemProperties;->mNativeGetString_2:Ljava/lang/reflect/Method;
 
     .line 27
-    const/4 v0, 0x1
+    const/4 v0, 0x0
 
     sput-boolean v0, Landroid/bb_sz/os/SystemProperties;->debug:Z
 
@@ -73,7 +73,7 @@
     .param p0, "key"    # Ljava/lang/String;
 
     .prologue
-    .line 242
+    .line 206
     const-string v0, "ro.build.id"
 
     invoke-virtual {p0, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
@@ -82,16 +82,16 @@
 
     if-eqz v0, :cond_b
 
-    .line 243
+    .line 207
     const-string p0, "refresh.id"
 
-    .line 271
+    .line 235
     .end local p0    # "key":Ljava/lang/String;
     :cond_a
     :goto_a
     return-object p0
 
-    .line 244
+    .line 208
     .restart local p0    # "key":Ljava/lang/String;
     :cond_b
     const-string v0, "ro.product.model"
@@ -102,12 +102,12 @@
 
     if-eqz v0, :cond_16
 
-    .line 245
+    .line 209
     const-string p0, "refresh.model"
 
     goto :goto_a
 
-    .line 246
+    .line 210
     :cond_16
     const-string v0, "ro.serialno"
 
@@ -117,12 +117,12 @@
 
     if-eqz v0, :cond_21
 
-    .line 247
+    .line 211
     const-string p0, "refresh.serial"
 
     goto :goto_a
 
-    .line 248
+    .line 212
     :cond_21
     const-string v0, "ro.build.version.release"
 
@@ -132,12 +132,12 @@
 
     if-eqz v0, :cond_2c
 
-    .line 249
+    .line 213
     const-string p0, "refresh.version"
 
     goto :goto_a
 
-    .line 250
+    .line 214
     :cond_2c
     const-string v0, "ro.build.version.sdk"
 
@@ -147,12 +147,12 @@
 
     if-eqz v0, :cond_37
 
-    .line 251
+    .line 215
     const-string p0, "refresh.api"
 
     goto :goto_a
 
-    .line 252
+    .line 216
     :cond_37
     const-string v0, "ro.product.manufacturer"
 
@@ -162,12 +162,12 @@
 
     if-eqz v0, :cond_42
 
-    .line 253
+    .line 217
     const-string p0, "refresh.manufacturer"
 
     goto :goto_a
 
-    .line 254
+    .line 218
     :cond_42
     const-string v0, "ro.product.brand"
 
@@ -177,12 +177,12 @@
 
     if-eqz v0, :cond_4d
 
-    .line 255
+    .line 219
     const-string p0, "refresh.brand"
 
     goto :goto_a
 
-    .line 256
+    .line 220
     :cond_4d
     const-string v0, "ro.build.product"
 
@@ -200,13 +200,13 @@
 
     if-eqz v0, :cond_60
 
-    .line 257
+    .line 221
     :cond_5d
     const-string p0, "refresh.product"
 
     goto :goto_a
 
-    .line 258
+    .line 222
     :cond_60
     const-string v0, "ro.product.device"
 
@@ -216,12 +216,12 @@
 
     if-eqz v0, :cond_6b
 
-    .line 259
+    .line 223
     const-string p0, "refresh.device"
 
     goto :goto_a
 
-    .line 260
+    .line 224
     :cond_6b
     const-string v0, "ro.product.board"
 
@@ -231,12 +231,12 @@
 
     if-eqz v0, :cond_76
 
-    .line 261
+    .line 225
     const-string p0, "refresh.board"
 
     goto :goto_a
 
-    .line 262
+    .line 226
     :cond_76
     const-string v0, "ro.product.cpu.abi"
 
@@ -246,12 +246,12 @@
 
     if-eqz v0, :cond_81
 
-    .line 263
+    .line 227
     const-string p0, "refresh.cpuabi"
 
     goto :goto_a
 
-    .line 264
+    .line 228
     :cond_81
     const-string v0, "ro.product.cpu.abi2"
 
@@ -261,12 +261,12 @@
 
     if-eqz v0, :cond_8d
 
-    .line 265
+    .line 229
     const-string p0, "refresh.cpuabi2"
 
     goto/16 :goto_a
 
-    .line 266
+    .line 230
     :cond_8d
     const-string v0, "ro.hardware"
 
@@ -276,12 +276,12 @@
 
     if-eqz v0, :cond_99
 
-    .line 267
+    .line 231
     const-string p0, "refresh.hardware"
 
     goto/16 :goto_a
 
-    .line 268
+    .line 232
     :cond_99
     const-string v0, "qemu.sf.lcd_density"
 
@@ -299,7 +299,7 @@
 
     if-eqz v0, :cond_a
 
-    .line 269
+    .line 233
     :cond_a9
     const-string p0, "refresh.densityDpi"
 
@@ -312,7 +312,7 @@
     .param p1, "value"    # I
 
     .prologue
-    .line 109
+    .line 73
     sget-boolean v0, Landroid/bb_sz/os/SystemProperties;->debug:Z
 
     if-eqz v0, :cond_26
@@ -349,7 +349,7 @@
 
     invoke-static {v0, v1}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
 
-    .line 110
+    .line 74
     :cond_26
     int-to-float v0, p1
 
@@ -366,19 +366,19 @@
     .param p1, "value"    # F
 
     .prologue
-    .line 230
+    .line 194
     invoke-static {}, Landroid/bb_sz/os/SystemProperties;->init()V
 
-    .line 231
+    .line 195
     move v1, p1
 
-    .line 232
+    .line 196
     .local v1, "result":F
     invoke-static {p0}, Landroid/bb_sz/os/SystemProperties;->changed(Ljava/lang/String;)Ljava/lang/String;
 
     move-result-object v0
 
-    .line 233
+    .line 197
     .local v0, "newKey":Ljava/lang/String;
     new-instance v2, Ljava/io/File;
 
@@ -406,7 +406,7 @@
 
     if-eqz v2, :cond_42
 
-    .line 234
+    .line 198
     invoke-static {}, Landroid/bb_sz/os/SystemProperties;->getMockProp()Ljava/util/Properties;
 
     move-result-object v2
@@ -437,7 +437,7 @@
 
     move-result v1
 
-    .line 236
+    .line 200
     :cond_42
     sget-boolean v2, Landroid/bb_sz/os/SystemProperties;->debug:Z
 
@@ -475,7 +475,7 @@
 
     invoke-static {v2, v3}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
 
-    .line 237
+    .line 201
     :cond_68
     return v1
 .end method
@@ -486,19 +486,19 @@
     .param p1, "value"    # I
 
     .prologue
-    .line 201
+    .line 165
     invoke-static {}, Landroid/bb_sz/os/SystemProperties;->init()V
 
-    .line 202
+    .line 166
     move v4, p1
 
-    .line 203
+    .line 167
     .local v4, "result":I
     invoke-static {p0}, Landroid/bb_sz/os/SystemProperties;->changed(Ljava/lang/String;)Ljava/lang/String;
 
     move-result-object v2
 
-    .line 204
+    .line 168
     .local v2, "newKey":Ljava/lang/String;
     new-instance v5, Ljava/io/File;
 
@@ -526,7 +526,7 @@
 
     if-eqz v5, :cond_42
 
-    .line 206
+    .line 170
     :try_start_23
     invoke-static {}, Landroid/bb_sz/os/SystemProperties;->getMockProp()Ljava/util/Properties;
 
@@ -560,7 +560,7 @@
 
     move-result v4
 
-    .line 213
+    .line 177
     :cond_42
     :goto_42
     if-ne v4, p1, :cond_68
@@ -569,7 +569,7 @@
 
     if-eqz v5, :cond_68
 
-    .line 215
+    .line 179
     :try_start_48
     sget-object v5, Landroid/bb_sz/os/SystemProperties;->mNativeGetInt:Ljava/lang/reflect/Method;
 
@@ -595,7 +595,7 @@
 
     move-result-object v3
 
-    .line 216
+    .line 180
     .local v3, "object":Ljava/lang/Object;
     if-eqz v3, :cond_68
 
@@ -603,7 +603,7 @@
 
     if-eqz v5, :cond_68
 
-    .line 217
+    .line 181
     check-cast v3, Ljava/lang/Integer;
 
     .end local v3    # "object":Ljava/lang/Object;
@@ -613,7 +613,7 @@
 
     move-result v4
 
-    .line 225
+    .line 189
     :cond_68
     :goto_68
     sget-boolean v5, Landroid/bb_sz/os/SystemProperties;->debug:Z
@@ -652,19 +652,19 @@
 
     invoke-static {v5, v6}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
 
-    .line 226
+    .line 190
     :cond_8e
     return v4
 
-    .line 207
+    .line 171
     :catch_8f
     move-exception v1
 
-    .line 208
+    .line 172
     .local v1, "ignored":Ljava/lang/Exception;
     move v4, p1
 
-    .line 209
+    .line 173
     sget-boolean v5, Landroid/bb_sz/os/SystemProperties;->debug:Z
 
     if-eqz v5, :cond_42
@@ -703,24 +703,24 @@
 
     goto :goto_42
 
-    .line 218
+    .line 182
     .end local v1    # "ignored":Ljava/lang/Exception;
     :catch_b8
     move-exception v0
 
-    .line 219
+    .line 183
     .local v0, "e":Ljava/lang/Exception;
     invoke-virtual {v0}, Ljava/lang/Exception;->printStackTrace()V
 
-    .line 220
+    .line 184
     move v4, p1
 
-    .line 221
+    .line 185
     sget-boolean v5, Landroid/bb_sz/os/SystemProperties;->debug:Z
 
     if-eqz v5, :cond_68
 
-    .line 222
+    .line 186
     const-string v5, "sky2"
 
     new-instance v6, Ljava/lang/StringBuilder;
@@ -762,19 +762,19 @@
     .param p1, "value"    # J
 
     .prologue
-    .line 180
+    .line 144
     invoke-static {}, Landroid/bb_sz/os/SystemProperties;->init()V
 
-    .line 181
+    .line 145
     move-wide v2, p1
 
-    .line 182
+    .line 146
     .local v2, "result":J
     invoke-static {p0}, Landroid/bb_sz/os/SystemProperties;->changed(Ljava/lang/String;)Ljava/lang/String;
 
     move-result-object v1
 
-    .line 183
+    .line 147
     .local v1, "newKey":Ljava/lang/String;
     new-instance v4, Ljava/io/File;
 
@@ -802,7 +802,7 @@
 
     if-eqz v4, :cond_42
 
-    .line 184
+    .line 148
     invoke-static {}, Landroid/bb_sz/os/SystemProperties;->getMockProp()Ljava/util/Properties;
 
     move-result-object v4
@@ -833,7 +833,7 @@
 
     move-result-wide v2
 
-    .line 187
+    .line 151
     :cond_42
     cmp-long v4, v2, p1
 
@@ -843,7 +843,7 @@
 
     if-eqz v4, :cond_64
 
-    .line 189
+    .line 153
     :try_start_4a
     sget-object v4, Landroid/bb_sz/os/SystemProperties;->mNativeGetLong:Ljava/lang/reflect/Method;
 
@@ -877,7 +877,7 @@
 
     move-result-wide v2
 
-    .line 196
+    .line 160
     :cond_64
     :goto_64
     sget-boolean v4, Landroid/bb_sz/os/SystemProperties;->debug:Z
@@ -916,22 +916,22 @@
 
     invoke-static {v4, v5}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
 
-    .line 197
+    .line 161
     :cond_8a
     return-wide v2
 
-    .line 190
+    .line 154
     :catch_8b
     move-exception v0
 
-    .line 191
+    .line 155
     .local v0, "e":Ljava/lang/Exception;
     invoke-virtual {v0}, Ljava/lang/Exception;->printStackTrace()V
 
-    .line 192
+    .line 156
     move-wide v2, p1
 
-    .line 193
+    .line 157
     sget-boolean v4, Landroid/bb_sz/os/SystemProperties;->debug:Z
 
     if-eqz v4, :cond_64
@@ -972,17 +972,64 @@
 .end method
 
 .method public static getMockProp()Ljava/util/Properties;
-    .registers 1
+    .registers 5
 
     .prologue
-    .line 275
-    const-string v0, "/data/local/tmp/test.prop"
+    .line 239
+    invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
 
-    invoke-static {v0}, Landroid/bb_sz/os/SystemProperties;->getMockProp(Ljava/lang/String;)Ljava/util/Properties;
+    move-result-wide v0
 
-    move-result-object v0
+    .line 240
+    .local v0, "time":J
+    const-string v2, "SKYTime"
 
-    return-object v0
+    new-instance v3, Ljava/lang/StringBuilder;
+
+    invoke-direct {v3}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v4, "elapsedRealtime = "
+
+    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v3
+
+    invoke-virtual {v3, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
+
+    move-result-object v3
+
+    invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v3
+
+    invoke-static {v2, v3}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
+
+    .line 241
+    const-wide/32 v2, 0xea60
+
+    cmp-long v2, v0, v2
+
+    if-gtz v2, :cond_2a
+
+    .line 242
+    const-string v2, "/data/local/tmp/reset.prop"
+
+    invoke-static {v2}, Landroid/bb_sz/os/SystemProperties;->getMockProp(Ljava/lang/String;)Ljava/util/Properties;
+
+    move-result-object v2
+
+    .line 244
+    :goto_29
+    return-object v2
+
+    :cond_2a
+    const-string v2, "/data/local/tmp/test.prop"
+
+    invoke-static {v2}, Landroid/bb_sz/os/SystemProperties;->getMockProp(Ljava/lang/String;)Ljava/util/Properties;
+
+    move-result-object v2
+
+    goto :goto_29
 .end method
 
 .method public static getMockProp(Ljava/lang/String;)Ljava/util/Properties;
@@ -990,16 +1037,16 @@
     .param p0, "file"    # Ljava/lang/String;
 
     .prologue
-    .line 279
+    .line 248
     new-instance v3, Ljava/util/Properties;
 
     invoke-direct {v3}, Ljava/util/Properties;-><init>()V
 
-    .line 280
+    .line 249
     .local v3, "prop":Ljava/util/Properties;
     const/4 v1, 0x0
 
-    .line 282
+    .line 251
     .local v1, "in":Ljava/io/InputStream;
     :try_start_6
     new-instance v2, Ljava/io/FileInputStream;
@@ -1009,7 +1056,7 @@
     .catch Ljava/lang/Exception; {:try_start_6 .. :try_end_b} :catch_1b
     .catchall {:try_start_6 .. :try_end_b} :catchall_27
 
-    .line 283
+    .line 252
     .end local v1    # "in":Ljava/io/InputStream;
     .local v2, "in":Ljava/io/InputStream;
     :try_start_b
@@ -1018,10 +1065,10 @@
     .catch Ljava/lang/Exception; {:try_start_b .. :try_end_e} :catch_36
     .catchall {:try_start_b .. :try_end_e} :catchall_33
 
-    .line 286
+    .line 255
     if-eqz v2, :cond_39
 
-    .line 288
+    .line 257
     :try_start_10
     invoke-virtual {v2}, Ljava/io/InputStream;->close()V
     :try_end_13
@@ -1029,40 +1076,40 @@
 
     move-object v1, v2
 
-    .line 293
+    .line 262
     .end local v2    # "in":Ljava/io/InputStream;
     .restart local v1    # "in":Ljava/io/InputStream;
     :cond_14
     :goto_14
     return-object v3
 
-    .line 289
+    .line 258
     .end local v1    # "in":Ljava/io/InputStream;
     .restart local v2    # "in":Ljava/io/InputStream;
     :catch_15
     move-exception v0
 
-    .line 290
+    .line 259
     .local v0, "e":Ljava/io/IOException;
     invoke-virtual {v0}, Ljava/io/IOException;->printStackTrace()V
 
     move-object v1, v2
 
-    .line 291
+    .line 260
     .end local v2    # "in":Ljava/io/InputStream;
     .restart local v1    # "in":Ljava/io/InputStream;
     goto :goto_14
 
-    .line 284
+    .line 253
     .end local v0    # "e":Ljava/io/IOException;
     :catch_1b
     move-exception v4
 
-    .line 286
+    .line 255
     :goto_1c
     if-eqz v1, :cond_14
 
-    .line 288
+    .line 257
     :try_start_1e
     invoke-virtual {v1}, Ljava/io/InputStream;->close()V
     :try_end_21
@@ -1070,17 +1117,17 @@
 
     goto :goto_14
 
-    .line 289
+    .line 258
     :catch_22
     move-exception v0
 
-    .line 290
+    .line 259
     .restart local v0    # "e":Ljava/io/IOException;
     invoke-virtual {v0}, Ljava/io/IOException;->printStackTrace()V
 
     goto :goto_14
 
-    .line 286
+    .line 255
     .end local v0    # "e":Ljava/io/IOException;
     :catchall_27
     move-exception v4
@@ -1088,28 +1135,28 @@
     :goto_28
     if-eqz v1, :cond_2d
 
-    .line 288
+    .line 257
     :try_start_2a
     invoke-virtual {v1}, Ljava/io/InputStream;->close()V
     :try_end_2d
     .catch Ljava/io/IOException; {:try_start_2a .. :try_end_2d} :catch_2e
 
-    .line 291
+    .line 260
     :cond_2d
     :goto_2d
     throw v4
 
-    .line 289
+    .line 258
     :catch_2e
     move-exception v0
 
-    .line 290
+    .line 259
     .restart local v0    # "e":Ljava/io/IOException;
     invoke-virtual {v0}, Ljava/io/IOException;->printStackTrace()V
 
     goto :goto_2d
 
-    .line 286
+    .line 255
     .end local v0    # "e":Ljava/io/IOException;
     .end local v1    # "in":Ljava/io/InputStream;
     .restart local v2    # "in":Ljava/io/InputStream;
@@ -1122,7 +1169,7 @@
     .restart local v1    # "in":Ljava/io/InputStream;
     goto :goto_28
 
-    .line 284
+    .line 253
     .end local v1    # "in":Ljava/io/InputStream;
     .restart local v2    # "in":Ljava/io/InputStream;
     :catch_36
@@ -1149,19 +1196,19 @@
     .param p0, "key"    # Ljava/lang/String;
 
     .prologue
-    .line 134
+    .line 98
     invoke-static {}, Landroid/bb_sz/os/SystemProperties;->init()V
 
-    .line 135
+    .line 99
     const/4 v2, 0x0
 
-    .line 136
+    .line 100
     .local v2, "result":Ljava/lang/String;
     invoke-static {p0}, Landroid/bb_sz/os/SystemProperties;->changed(Ljava/lang/String;)Ljava/lang/String;
 
     move-result-object v1
 
-    .line 137
+    .line 101
     .local v1, "newKey":Ljava/lang/String;
     new-instance v3, Ljava/io/File;
 
@@ -1189,7 +1236,7 @@
 
     if-eqz v3, :cond_2d
 
-    .line 138
+    .line 102
     invoke-static {}, Landroid/bb_sz/os/SystemProperties;->getMockProp()Ljava/util/Properties;
 
     move-result-object v3
@@ -1200,7 +1247,7 @@
 
     move-result-object v2
 
-    .line 141
+    .line 105
     :cond_2d
     if-nez v2, :cond_42
 
@@ -1208,7 +1255,7 @@
 
     if-eqz v3, :cond_42
 
-    .line 143
+    .line 107
     :try_start_33
     sget-object v3, Landroid/bb_sz/os/SystemProperties;->mNativeGetString_1:Ljava/lang/reflect/Method;
 
@@ -1231,7 +1278,7 @@
     :try_end_42
     .catch Ljava/lang/Exception; {:try_start_33 .. :try_end_42} :catch_69
 
-    .line 152
+    .line 116
     .restart local v2    # "result":Ljava/lang/String;
     :cond_42
     :goto_42
@@ -1271,29 +1318,29 @@
 
     invoke-static {v3, v4}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
 
-    .line 153
+    .line 117
     :cond_68
     return-object v2
 
-    .line 144
+    .line 108
     .end local v2    # "result":Ljava/lang/String;
     :catch_69
     move-exception v0
 
-    .line 145
+    .line 109
     .local v0, "e":Ljava/lang/Exception;
     invoke-virtual {v0}, Ljava/lang/Exception;->printStackTrace()V
 
-    .line 146
+    .line 110
     const-string v2, ""
 
-    .line 147
+    .line 111
     .restart local v2    # "result":Ljava/lang/String;
     sget-boolean v3, Landroid/bb_sz/os/SystemProperties;->debug:Z
 
     if-eqz v3, :cond_42
 
-    .line 148
+    .line 112
     const-string v3, "sky2"
 
     new-instance v4, Ljava/lang/StringBuilder;
@@ -1335,19 +1382,19 @@
     .param p1, "value"    # Ljava/lang/String;
 
     .prologue
-    .line 157
+    .line 121
     invoke-static {}, Landroid/bb_sz/os/SystemProperties;->init()V
 
-    .line 158
+    .line 122
     move-object v2, p1
 
-    .line 159
+    .line 123
     .local v2, "result":Ljava/lang/String;
     invoke-static {p0}, Landroid/bb_sz/os/SystemProperties;->changed(Ljava/lang/String;)Ljava/lang/String;
 
     move-result-object v1
 
-    .line 160
+    .line 124
     .local v1, "newKey":Ljava/lang/String;
     new-instance v3, Ljava/io/File;
 
@@ -1375,7 +1422,7 @@
 
     if-eqz v3, :cond_3e
 
-    .line 161
+    .line 125
     invoke-static {}, Landroid/bb_sz/os/SystemProperties;->getMockProp()Ljava/util/Properties;
 
     move-result-object v3
@@ -1402,7 +1449,7 @@
 
     move-result-object v2
 
-    .line 164
+    .line 128
     :cond_3e
     if-eqz v2, :cond_5c
 
@@ -1416,7 +1463,7 @@
 
     if-eqz v3, :cond_5c
 
-    .line 166
+    .line 130
     :try_start_4a
     sget-object v3, Landroid/bb_sz/os/SystemProperties;->mNativeGetString_2:Ljava/lang/reflect/Method;
 
@@ -1443,7 +1490,7 @@
     :try_end_5c
     .catch Ljava/lang/Exception; {:try_start_4a .. :try_end_5c} :catch_83
 
-    .line 175
+    .line 139
     .restart local v2    # "result":Ljava/lang/String;
     :cond_5c
     :goto_5c
@@ -1483,29 +1530,29 @@
 
     invoke-static {v3, v4}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
 
-    .line 176
+    .line 140
     :cond_82
     return-object v2
 
-    .line 167
+    .line 131
     .end local v2    # "result":Ljava/lang/String;
     :catch_83
     move-exception v0
 
-    .line 168
+    .line 132
     .local v0, "e":Ljava/lang/Exception;
     invoke-virtual {v0}, Ljava/lang/Exception;->printStackTrace()V
 
-    .line 169
+    .line 133
     move-object v2, p1
 
-    .line 170
+    .line 134
     .restart local v2    # "result":Ljava/lang/String;
     sget-boolean v3, Landroid/bb_sz/os/SystemProperties;->debug:Z
 
     if-eqz v3, :cond_5c
 
-    .line 171
+    .line 135
     const-string v3, "sky2"
 
     new-instance v4, Ljava/lang/StringBuilder;
@@ -1551,13 +1598,13 @@
     .registers 7
 
     .prologue
-    .line 71
+    .line 35
     :try_start_0
     sget-object v2, Landroid/bb_sz/os/SystemProperties;->mCls:Ljava/lang/Class;
 
     if-nez v2, :cond_c
 
-    .line 72
+    .line 36
     const-string v2, "android.os.SystemProperties"
 
     invoke-static {v2}, Ljava/lang/Class;->forName(Ljava/lang/String;)Ljava/lang/Class;
@@ -1568,7 +1615,7 @@
     :try_end_c
     .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_c} :catch_74
 
-    .line 78
+    .line 42
     .local v1, "ignored":Ljava/lang/Exception;
     :cond_c
     :goto_c
@@ -1576,7 +1623,7 @@
 
     if-eqz v2, :cond_22
 
-    .line 80
+    .line 44
     :try_start_10
     sget-object v2, Landroid/bb_sz/os/SystemProperties;->mCls:Ljava/lang/Class;
 
@@ -1600,7 +1647,7 @@
     :try_end_22
     .catch Ljava/lang/NoSuchMethodException; {:try_start_10 .. :try_end_22} :catch_79
 
-    .line 85
+    .line 49
     :cond_22
     :goto_22
     sget-object v2, Landroid/bb_sz/os/SystemProperties;->mCls:Ljava/lang/Class;
@@ -1608,7 +1655,7 @@
     .end local v1    # "ignored":Ljava/lang/Exception;
     if-eqz v2, :cond_3d
 
-    .line 87
+    .line 51
     :try_start_26
     sget-object v2, Landroid/bb_sz/os/SystemProperties;->mCls:Ljava/lang/Class;
 
@@ -1638,14 +1685,14 @@
     :try_end_3d
     .catch Ljava/lang/NoSuchMethodException; {:try_start_26 .. :try_end_3d} :catch_7e
 
-    .line 92
+    .line 56
     :cond_3d
     :goto_3d
     sget-object v2, Landroid/bb_sz/os/SystemProperties;->mCls:Ljava/lang/Class;
 
     if-eqz v2, :cond_58
 
-    .line 94
+    .line 58
     :try_start_41
     sget-object v2, Landroid/bb_sz/os/SystemProperties;->mCls:Ljava/lang/Class;
 
@@ -1675,14 +1722,14 @@
     :try_end_58
     .catch Ljava/lang/NoSuchMethodException; {:try_start_41 .. :try_end_58} :catch_83
 
-    .line 99
+    .line 63
     :cond_58
     :goto_58
     sget-object v2, Landroid/bb_sz/os/SystemProperties;->mCls:Ljava/lang/Class;
 
     if-eqz v2, :cond_73
 
-    .line 101
+    .line 65
     :try_start_5c
     sget-object v2, Landroid/bb_sz/os/SystemProperties;->mCls:Ljava/lang/Class;
 
@@ -1712,16 +1759,16 @@
     :try_end_73
     .catch Ljava/lang/NoSuchMethodException; {:try_start_5c .. :try_end_73} :catch_88
 
-    .line 106
+    .line 70
     :cond_73
     :goto_73
     return-void
 
-    .line 74
+    .line 38
     :catch_74
     move-exception v1
 
-    .line 75
+    .line 39
     .restart local v1    # "ignored":Ljava/lang/Exception;
     const/4 v2, 0x0
 
@@ -1729,45 +1776,45 @@
 
     goto :goto_c
 
-    .line 81
+    .line 45
     :catch_79
     move-exception v0
 
-    .line 82
+    .line 46
     .local v0, "e":Ljava/lang/NoSuchMethodException;
     invoke-virtual {v0}, Ljava/lang/NoSuchMethodException;->printStackTrace()V
 
     goto :goto_22
 
-    .line 88
+    .line 52
     .end local v0    # "e":Ljava/lang/NoSuchMethodException;
     .end local v1    # "ignored":Ljava/lang/Exception;
     :catch_7e
     move-exception v0
 
-    .line 89
+    .line 53
     .restart local v0    # "e":Ljava/lang/NoSuchMethodException;
     invoke-virtual {v0}, Ljava/lang/NoSuchMethodException;->printStackTrace()V
 
     goto :goto_3d
 
-    .line 95
+    .line 59
     .end local v0    # "e":Ljava/lang/NoSuchMethodException;
     :catch_83
     move-exception v0
 
-    .line 96
+    .line 60
     .restart local v0    # "e":Ljava/lang/NoSuchMethodException;
     invoke-virtual {v0}, Ljava/lang/NoSuchMethodException;->printStackTrace()V
 
     goto :goto_58
 
-    .line 102
+    .line 66
     .end local v0    # "e":Ljava/lang/NoSuchMethodException;
     :catch_88
     move-exception v0
 
-    .line 103
+    .line 67
     .restart local v0    # "e":Ljava/lang/NoSuchMethodException;
     invoke-virtual {v0}, Ljava/lang/NoSuchMethodException;->printStackTrace()V
 
@@ -1778,7 +1825,7 @@
     .registers 1
 
     .prologue
-    .line 31
+    .line 30
     const/4 v0, 0x1
 
     return v0
@@ -1789,7 +1836,7 @@
     .param p0, "key"    # Ljava/lang/String;
 
     .prologue
-    .line 114
+    .line 78
     sget-boolean v0, Landroid/bb_sz/os/SystemProperties;->debug:Z
 
     if-eqz v0, :cond_1c
@@ -1816,7 +1863,7 @@
 
     invoke-static {v0, v1}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
 
-    .line 115
+    .line 79
     :cond_1c
     invoke-static {p0}, Landroid/bb_sz/os/SystemProperties;->getStringValue(Ljava/lang/String;)Ljava/lang/String;
 
@@ -1831,7 +1878,7 @@
     .param p1, "value"    # Ljava/lang/String;
 
     .prologue
-    .line 119
+    .line 83
     sget-boolean v0, Landroid/bb_sz/os/SystemProperties;->debug:Z
 
     if-eqz v0, :cond_26
@@ -1868,7 +1915,7 @@
 
     invoke-static {v0, v1}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
 
-    .line 120
+    .line 84
     :cond_26
     invoke-static {p0, p1}, Landroid/bb_sz/os/SystemProperties;->getStringValue(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 
@@ -1883,7 +1930,7 @@
     .param p1, "value"    # I
 
     .prologue
-    .line 124
+    .line 88
     sget-boolean v0, Landroid/bb_sz/os/SystemProperties;->debug:Z
 
     if-eqz v0, :cond_26
@@ -1920,7 +1967,7 @@
 
     invoke-static {v0, v1}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
 
-    .line 125
+    .line 89
     :cond_26
     invoke-static {p0, p1}, Landroid/bb_sz/os/SystemProperties;->getIntValue(Ljava/lang/String;I)I
 
@@ -1935,7 +1982,7 @@
     .param p1, "value"    # J
 
     .prologue
-    .line 129
+    .line 93
     sget-boolean v0, Landroid/bb_sz/os/SystemProperties;->debug:Z
 
     if-eqz v0, :cond_26
@@ -1972,7 +2019,7 @@
 
     invoke-static {v0, v1}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
 
-    .line 130
+    .line 94
     :cond_26
     invoke-static {p0, p1, p2}, Landroid/bb_sz/os/SystemProperties;->getLongValue(Ljava/lang/String;J)J
 

@@ -82,9 +82,13 @@ public class RunManager {
         L.d(TAG, "start() state = " + state);
         if (state == STATE_RUNING) return;
         state = STATE_RUNING;
+        ShHelper.getInstance().clear();
         if (!isNeedVpn) {
-            checkIpAndStart(context);
-//            initDeviceInfoTypeAndStart(context);
+            if (SP.getInstance().getBooleanValue(Contants.SETTING_NEED_CHANGE_IP_KEY)) {
+                checkIpAndStart(context);
+            } else {
+                initDeviceInfoTypeAndStart(context);
+            }
             return;
         }
         Api.getInstance().getVpnInfo(new IHttpCallback() {
@@ -186,7 +190,7 @@ public class RunManager {
         if (TextUtils.isEmpty(ip)) return false;
         curIp = SP.getInstance().getStringValue(Contants.KEY_CUR_IP);
         boolean res = null != curIp && !curIp.equals(ip);
-        if (res){
+        if (res) {
             curIp = ip;
             SP.getInstance().setStringValue(Contants.KEY_CUR_IP, ip);
         }
@@ -236,7 +240,7 @@ public class RunManager {
                                 } else {
                                     if (isNeedVpn)
                                         checkVPNAndStart(context);
-                                    else{
+                                    else {
                                         try {
                                             Thread.sleep(1000 * 10);
                                         } catch (InterruptedException ignored) {
@@ -656,6 +660,17 @@ public class RunManager {
         list.add("HM NOTE 1LTE 2");
         list.add("HM NOTE 1LTE 3");
         list.add("HM NOTE 1LTE 4");
+        list.add("HM NOTE 1LTE 5");
+        list.add("HM NOTE 1LTE 6");
+        list.add("HM NOTE 1LTE 7");
+        list.add("HM NOTE 1LTE 8");
+        list.add("HM NOTE 1LTE 9");
+        list.add("HM NOTE 1LTE 10");
+        list.add("HM NOTE 1LTE 11");
+        list.add("HM NOTE 1LTE 12");
+        list.add("HM NOTE 1LTE 13");
+        list.add("HM NOTE 1LTE 14");
+        list.add("HM NOTE 1LTE 15");
         list.add("ZTE Q505T");
         list.add("Lenovo P780");
         list.add("Nubia NX511J");

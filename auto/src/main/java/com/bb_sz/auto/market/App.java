@@ -16,7 +16,7 @@ public class App {
     public long w_infos = 5;//app详情页等待时长，单位秒
     public long w_input = 10;//搜索等待时间，单位秒
     public long w_install = 10;//app安装时间，单位秒
-    public long w_play = 30;//app打开完的时间，单位秒
+    public long w_play = 30;//app打开play的时间，单位秒
     public int time_out = 5 * 60;//运行超时时长, 单位秒
     public int swipe = 3;//滚动间隔，单位秒
     public int swipe_time_out = 3 * 60;//滚动超时时间，单位秒
@@ -27,11 +27,11 @@ public class App {
     public long run_blank = 250;//循环读取当前页面的间隔， 单位毫秒
     public int install_ready_time = 5;//安装等待时间， 单位秒
     public int open_ready_time = 5;//安装后启动app等待时间，单位秒
-    public int qh360type;
-    public String qh360typekey;//
-    public int qh360typeindex;
-    public int down_times;
-    public String local_name;
+    public int qh360type;//搜索关键字后，360出来的版本类型
+    public String qh360typekey;//"查看全部"
+    public int qh360typeindex;//第几个"查看全部"
+    public int down_times;//下载页面等待的次数
+    public String local_name;//本地apk文件名称
 
     @Override
     public String toString() {

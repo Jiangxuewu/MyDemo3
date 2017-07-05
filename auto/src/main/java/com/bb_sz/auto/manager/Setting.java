@@ -59,4 +59,9 @@ public class Setting {
      * id起始值
      */
     public static int COUNT;
+
+    /**
+     * 是否开启ip校验
+     */
+    public static boolean is_need_check_ip = false;
 }

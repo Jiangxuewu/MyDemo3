@@ -43,7 +43,7 @@ public class Api {
         if (id <= 0) return;
         HttpEntry entry = new HttpEntry();
         entry.setType(Http.GET);
-        entry.setBaseUrl(url + method + "?_id=" + id + "&phoneName=" + RunManager.getInstance().getPhoneName());
+        entry.setBaseUrl(url + method + "?_id=" + id + "&phoneName=" + RunManager.getInstance().getPhoneName() + "&t=" + System.currentTimeMillis());
         entry.setCallback(callback);
         Http.getInstance().request(entry);
     }
@@ -61,6 +61,7 @@ public class Api {
         Map<String, String> body = new HashMap<>();
         body.put("type", String.valueOf(type));
         body.put("pkg", pkg);
+        body.put("t", String.valueOf(System.currentTimeMillis()));
         body.put("phoneName", RunManager.getInstance().getPhoneName());
         entry.setBody(body);
 
@@ -74,7 +75,7 @@ public class Api {
     public void initMarkets(IHttpCallback callback) {
         HttpEntry entry = new HttpEntry();
         entry.setType(Http.GET);
-        entry.setBaseUrl(url + "markets.php?" + "phoneName=" + RunManager.getInstance().getPhoneName());
+        entry.setBaseUrl(url + "markets.php?" + "phoneName=" + RunManager.getInstance().getPhoneName() + "&t=" + System.currentTimeMillis());
         entry.setCallback(callback);
         Http.getInstance().request(entry);
     }
@@ -86,7 +87,7 @@ public class Api {
     public void getApp(IHttpCallback callback, int type) {
         HttpEntry entry = new HttpEntry();
         entry.setType(Http.GET);
-        entry.setBaseUrl(url + "runApps.php?type=" + type + "&phoneName=" + RunManager.getInstance().getPhoneName());
+        entry.setBaseUrl(url + "runApps.php?type=" + type + "&phoneName=" + RunManager.getInstance().getPhoneName() + "&t=" + System.currentTimeMillis());
         entry.setCallback(callback);
         Http.getInstance().request(entry);
     }
@@ -94,7 +95,7 @@ public class Api {
     public void getDataType(IHttpCallback callback){
         HttpEntry entry = new HttpEntry();
         entry.setType(Http.GET);
-        entry.setBaseUrl(url + "dataType.php?phoneName=" + RunManager.getInstance().getPhoneName());
+        entry.setBaseUrl(url + "dataType.php?phoneName=" + RunManager.getInstance().getPhoneName() + "&t=" + System.currentTimeMillis());
         entry.setCallback(callback);
         Http.getInstance().request(entry);
     }
@@ -102,7 +103,7 @@ public class Api {
     public void getIp(IHttpCallback callback) {
         HttpEntry entry = new HttpEntry();
         entry.setType(Http.GET);
-        entry.setBaseUrl("http://www.bb-sz.com/ip.php?phoneName=" + RunManager.getInstance().getPhoneName());
+        entry.setBaseUrl("http://www.bb-sz.com/ip.php?phoneName=" + RunManager.getInstance().getPhoneName() + "&t=" + System.currentTimeMillis());
         entry.setCallback(callback);
         Http.getInstance().request(entry);
     }
@@ -110,7 +111,7 @@ public class Api {
     public void getVpnInfo(IHttpCallback callback) {
         HttpEntry entry = new HttpEntry();
         entry.setType(Http.GET);
-        entry.setBaseUrl(url + "vpnInfo.php?phoneName=" + RunManager.getInstance().getPhoneName());
+        entry.setBaseUrl(url + "vpnInfo.php?phoneName=" + RunManager.getInstance().getPhoneName() + "&t=" + System.currentTimeMillis());
         entry.setCallback(callback);
         Http.getInstance().request(entry);
     }

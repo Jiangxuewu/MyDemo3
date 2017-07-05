@@ -67,6 +67,7 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
             }
         }
     };
+    private CheckBox checkBoxCheckIp;
 
 
     @Override
@@ -345,6 +346,7 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
         Setting.isNotChangeDeviceInfo = SP.getInstance().getBooleanValue(Contants.SETTING_NOT_CHANGE_D_INFO_KEY);
         Setting.isNeedRebootTimeBlank = SP.getInstance().getBooleanValue(Contants.SETTING_REBOOT_TIME_BLANK_KEY);
         Setting.isRunNetData = SP.getInstance().getBooleanValue(Contants.SETTING_IS_RUN_NET_DATA_KEY);
+        Setting.is_need_check_ip = SP.getInstance().getBooleanValue(Contants.SETTING_NEED_CHANGE_IP_KEY);
 
         Setting.iChangeIpCount = SP.getInstance().getIntValue(Contants.SETTING_CHANGE_IP_COUNT_KEY);
         Setting.uninstallKeyWork = SP.getInstance().getStringValue(Contants.SETTING_UNINSTALL_APP_KEYS_KEY);
@@ -369,6 +371,7 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
         checkBoxNotChangeDInfo = (CheckBox) findViewById(R.id.cbox_is_not_change_device_info);
         checkBoxRebootTimeBlank = (CheckBox) findViewById(R.id.cbox_reboot_time_blank);
         checkBoxRunNetData = (CheckBox) findViewById(R.id.cbox_run_net_data);
+        checkBoxCheckIp= (CheckBox) findViewById(R.id.cbox_check_ip);
 
         editTextIpCounts = (EditText) findViewById(R.id.edit_ip);
         editTextUninstallKeys = (EditText) findViewById(R.id.edit_uninstall_app);
@@ -381,8 +384,16 @@ public class RunActivity extends Activity implements AccessibilityManager.Access
         checkBoxNotChangeDInfo.setChecked(Setting.isNotChangeDeviceInfo);
         checkBoxRebootTimeBlank.setChecked(Setting.isNeedRebootTimeBlank);
         checkBoxRunNetData.setChecked(Setting.isRunNetData);
+        checkBoxCheckIp.setChecked(Setting.is_need_check_ip);
 
 
+        checkBoxCheckIp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Setting.is_need_check_ip = b;
+                SP.getInstance().setBooleanValue(Contants.SETTING_NEED_CHANGE_IP_KEY, b);
+            }
+        });
         checkBoxIp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
