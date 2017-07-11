@@ -530,6 +530,7 @@ public class RunManager {
     public void stop() {
         state = STATE_NONE;
         SP.getInstance().stop();
+        ShHelper.getInstance().clear();
     }
 
     public void start() {

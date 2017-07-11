@@ -7,6 +7,7 @@ import android.content.Intent;
 import com.bb_sz.auto.manager.Contants;
 import com.bb_sz.auto.manager.RunManager;
 import com.bb_sz.auto.manager.SP;
+import com.bb_sz.auto.system.AppHelper;
 import com.bb_sz.lib.log.L;
 
 public class BatterInfoReceiver extends BroadcastReceiver {
@@ -32,8 +33,9 @@ public class BatterInfoReceiver extends BroadcastReceiver {
                 L.i(TAG, "health = " + batteryinfos.m_iHealth + ", level = " + batteryinfos.iGetLevel() + ", m_iTemperature = " + ((float) batteryinfos.m_iTemperature * 0.1));
             if (batteryinfos.m_iHealth != 2 || batteryinfos.iGetLevel() < 5 || ((float) batteryinfos.m_iTemperature * 0.1) > 47) {
                 stopMainRun(context);
+                closeAllOtherApp(context);
 //                ScreenHelper.getInstance().lockScreen(context);
-            } else if (batteryinfos.m_iHealth == 2 && batteryinfos.iGetLevel() > 15 && ((float) batteryinfos.m_iTemperature * 0.1) < 31){
+            } else if (batteryinfos.m_iHealth == 2 && batteryinfos.iGetLevel() > 15 && ((float) batteryinfos.m_iTemperature * 0.1) < 35){
 //                ScreenHelper.getInstance().unlockScreen(context);
                 startMainRun(context);
             }
@@ -42,6 +44,10 @@ public class BatterInfoReceiver extends BroadcastReceiver {
         } else if (Intent.ACTION_BATTERY_OKAY.equals(action)) {
 //            startMainRun(context);
         }
+    }
+
+    private void closeAllOtherApp(Context context) {
+        AppHelper.getInstance().closeAllOtherApp(context);
     }
 
     private void startMainRun(Context context) {
