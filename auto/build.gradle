@@ -18,8 +18,8 @@ android {
         applicationId "com.bb_sz.auto"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 18
-        versionName "2.7"
+        versionCode 19
+        versionName "2.8"
     }
 
     buildTypes {

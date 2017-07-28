@@ -11,6 +11,7 @@ import com.bb_sz.auto.helper.sh.ShRunCallback;
 import com.bb_sz.auto.http.Api;
 import com.bb_sz.auto.info.InfoManager;
 import com.bb_sz.auto.ip.VPNHelper;
+import com.bb_sz.auto.localhttp.LocalHttp;
 import com.bb_sz.auto.market.App;
 import com.bb_sz.auto.market.DataType;
 import com.bb_sz.auto.market.IP;
@@ -562,6 +563,7 @@ public class RunManager {
                                     App app = new Gson().fromJson(json, App.class);
                                     if (null != app) {
                                         L.i(TAG, "readyForStart()....start getApp. success..");
+                                        LocalHttp.getInstance().init(app.local_name);
                                         int phoneType = getSelPhoneType();
                                         if (phoneType == Q505T) {
                                             _runLast(context, app);
