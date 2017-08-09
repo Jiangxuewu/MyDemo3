@@ -11,14 +11,17 @@ public class ACTReceiver extends BroadcastReceiver {
     private static final String TAG = "ACTReceiver";
 
     public static String act;
+    public static String success;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-//        L.d(TAG, "action:" + action);
+        L.d(TAG, "action:" + action);
         if ("SKY_ACTIVITY_ACTION".equals(action)) {
             act = intent.getStringExtra("act");
-//            L.d(TAG, "act:" + act);
+            if (null == success)
+                success = intent.getStringExtra("success");
+            L.d(TAG, "act:" + act + ", success = " + success);
         }
     }
 }

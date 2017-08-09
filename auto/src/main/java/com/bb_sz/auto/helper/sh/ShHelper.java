@@ -12,7 +12,9 @@ import com.bb_sz.auto.manager.Contants;
 import com.bb_sz.auto.manager.RunManager;
 import com.bb_sz.auto.manager.SP;
 import com.bb_sz.auto.market.App;
+import com.bb_sz.auto.receiver.ACTReceiver;
 import com.bb_sz.lib.log.L;
+import com.google.gson.Gson;
 
 import java.util.Random;
 
@@ -25,9 +27,9 @@ public class ShHelper {
     private static ShHelper mInstance;
 
     public static final String yybPkg = "com.tencent.android.qqdownloader";
-    public static final String yybLauncher = "com.tencent.assistant.activity.SplashActivity";//com.tencent.android.qqdownloader/
+    //    public static final String yybLauncher = "com.tencent.assistant.activity.SplashActivity";//com.tencent.android.qqdownloader/
     //yyb7.0
-//    private static final String yybLauncher = "com.tencent.pangu.link.SplashActivity";//com.tencent.android.qqdownloader/
+    private static final String yybLauncher = "com.tencent.pangu.link.SplashActivity";//com.tencent.android.qqdownloader/
 
     public static final String qihooPkg = "com.qihoo.appstore";
     public static final String qihooLauncher = "com.qihoo.appstore.home.LauncherActivity";
@@ -67,6 +69,7 @@ public class ShHelper {
 
 
     public void searchShFile_HM_NOTE(Context context, ShRunCallback callback, App app) {
+        ACTReceiver.success = null;
         if (app.m_type == 0) {
             searchShFile_HM_NOTE_QiHoo(context, callback, app);
         } else if (app.m_type == 1) {
@@ -137,13 +140,229 @@ public class ShHelper {
         boolean isInstallSuccess = false;
         String cur = null;
         long homePageStartTimeStart = 0;
+        long searchPageStartTime = 0;
+        boolean isOpen = false;
+        boolean runFlag = SP.getInstance().getBooleanValue(Contants.KEY_RUN_FLAG);
+        _sendBroad(context, app.input, app.name, "SearchActivity", "GenericWordCategoryActivity", app.qh360typekey, app.qh360type, app.qh360typeindex);// 输入关键字并开始搜索
+        sendBroad(context, app);
+
+        final int phoneType = RunManager.getInstance().getSelPhoneType();
+        int downTimeCount = 0;
+        while (!isInstallSuccess && runFlag) {
+            sleep(app.run_blank);
+            runFlag = SP.getInstance().getBooleanValue(Contants.KEY_RUN_FLAG);
+            if (shStartTime > 0 && System.currentTimeMillis() - shStartTime > app.time_out * 1000) {//5分钟内未完成，则为失败
+                L.i(TAG, "shStartTime = " + shStartTime + ", b = " + (System.currentTimeMillis() - shStartTime));
+                break;
+            }
+            tmp = CheckHelp.getInstance().getCurrentActivityName(context);
+            if (null != ACTReceiver.success && "SKY_AUTO_RUN_SUCCESS".equals(ACTReceiver.success)) {
+                isInstallSuccess = true;
+                ACTReceiver.success = null;
+            }
+            if (null == cur || !cur.equals(tmp)) {
+                cur = tmp;
+                L.v(TAG, "cur = " + cur);
+            }
+            if ("com.qihoo.personPortrait.PersonPortraitGuideActivity".equals(cur)) {//选择性别页面
+//                selectSex(phoneType);
+            } else if ("com.qihoo.appstore.guide.ThemeTransitActivity".equals(cur)) {
+
+            } else if ("com.qihoo.appstore.webview.WebViewActivity".equals(cur)) {//安装他们 优惠不断
+//                if (phoneType == RunManager.P780) {
+//                    if (webPageStartTime == 0) {
+//                        webPageStartTime = System.currentTimeMillis();
+//                    }
+//                    if (System.currentTimeMillis() - webPageStartTime > 5 * 1000) {//
+//                        doBackBtn();
+//                        webPageStartTime = 0;
+//                    }
+//                } else {
+//                    doBackBtn();
+//                }
+            } else if ("com.qihoo.appstore.home.MainActivity".equals(cur)) {//首页l
+                searchPageStartTime = 0;
+                _sendBroad(context, app.input, app.name, "SearchActivity", "GenericWordCategoryActivity", app.qh360typekey, app.qh360type, app.qh360typeindex);// 输入关键字并开始搜索
+                sendBroad(context, app);
+                if (homePageStartTimeStart == 0) {
+                    homePageStartTimeStart = System.currentTimeMillis();
+                }
+                if (System.currentTimeMillis() - homePageStartTimeStart > app.w_main * 1000) {//
+                    if (phoneType == RunManager.NX511J) {
+                        input(470, 166);//点击搜索框
+                    } else {
+                        input(338, 100);//点击搜索框
+                    }
+                    homePageStartTimeStart = 0;
+                }
+            } else if ("com.qihoo.appstore.search.SearchActivity".equals(cur) || "com.qihoo.appstore.search.GenericWordCategoryActivity".equals(cur)) {
+                //搜索页面 1
+//                homePageStartTimeStart = 0;
+                if (searchPageStartTime == 0) {
+                    searchPageStartTime = System.currentTimeMillis();
+                }
+//                if (System.currentTimeMillis() - searchPageStartTime < app.w_search * 1000) {
+//                    continue;
+//                }
+//                if (app.qh360type == 1 && "com.qihoo.appstore.search.GenericWordCategoryActivity".equals(cur)) {
+//                } else if (app.qh360type == 1 && "com.qihoo.appstore.search.SearchActivity".equals(cur)) {
+//                    sleep(5000);
+//                } else if (app.qh360type == 0 && "com.qihoo.appstore.search.SearchActivity".equals(cur)) {
+//                }
+//                if (phoneType == RunManager.P780) {
+//                    swipe(100, 1000, 100, 10, app.swipe);
+//                } else if (phoneType == RunManager.NX511J) {
+//                    swipe(100, 1000, 100, 10, app.swipe);
+//                } else {
+//                    swipe(100, 600, 100, 10, app.swipe);
+//                }
+                //滚动超时， 有时候滚动过了，没找到app的时候返回前一页
+                if (System.currentTimeMillis() - searchPageStartTime > 1000 * app.swipe_time_out) {
+                    searchPageStartTime = 0;
+                    doBackBtn();
+                    if (app.qh360type == 1) {
+                        doBackBtn();
+                    }
+                }
+            } else if ("com.qihoo.appstore.appinfopage.AppInfoActivity".equals(cur)) {//app 详情页面
+//                if (appPageStartTime == 0) {
+//                    appPageStartTime = System.currentTimeMillis();
+//                }
+//                if (System.currentTimeMillis() - appPageStartTime > app.w_infos * 1000) {//
+//                    if (phoneType == RunManager.NX511J) {
+//                        if (downTimeCount <= app.down_times) {
+//                            input(541, 1833);
+//                        }
+//                        downTimeCount++;
+//                    } else {
+//                        if (downTimeCount <= app.down_times) {
+//                            input(206, 1230);
+//                        }
+//                        downTimeCount++;
+//                    }
+//                    appPageStartTime = 0;
+//                    if (downTimeCount > app.down_times) {// 下载超时，算成功
+//                        if (!TextUtils.isEmpty(app.local_name)) {
+//                            CMD.doSuExec("pm install /sdcard/TM/" + app.local_name);
+//                            sleep(5000);
+//                            // next times
+//                            isInstallSuccess = true;
+//                            home(context);
+//                        }
+//                    }
+//                }
+
+            } else if ("com.qihoo.appstore.install.NormalInstallTransferActivity".equals(cur)) {
+            } else if ("com.android.packageinstaller.PackageInstallerActivity".equals(cur)) {
+//                if (installPageStartTime == 0) {
+//                    installPageStartTime = System.currentTimeMillis();
+//                }
+//                if (System.currentTimeMillis() - installPageStartTime > app.install_ready_time * 1000) {//
+//                    if (phoneType == RunManager.NX511J && downTimeCount <= 5) {
+//                        input(807, 1823);//点击安装按钮
+//                    } else
+//                        input(546, 1230);//点击安装按钮
+//                    installPageStartTime = 0;
+//                }
+            } else if ("com.android.packageinstaller.InstallAppProgress".equals(cur)) {
+//                sleep(app.w_install * 1000);
+//                int k = new Random().nextInt(100);
+//                if (k >= app.open) {//100% open app
+//                    isOpen = true;
+//                    if (phoneType == RunManager.NX511J && downTimeCount <= 5) {
+//                        input(807, 1823);//打开
+//                    } else
+//                        input(546, 1230);//打开
+//                } else {
+//                    isOpen = false;
+//                    if (phoneType == RunManager.NX511J) {
+//                        input(274, 1823);//完成
+//                    } else {
+//                        input(176, 1230);//完成
+//                    }
+//                    home(context);
+//                }
+//                // next times
+//                isInstallSuccess = true;
+            } else if ("com.android.vpndialogs.ConfirmDialog".equals(cur)) {
+//                if (phoneType == RunManager.NX511J && downTimeCount <= 5) {
+//                    input(675, 1302);//Need Test
+//                } else
+//                    input(450, 868);
+            } else if ("com.qihoo.appstore.base.BaseDialogActivity".equals(cur)) {
+//                if (phoneType == RunManager.NX511J && downTimeCount <= 5) {
+//                    input(460, 1769);
+//                } else
+//                    input(206, 1183);
+            } else if ("com.android.launcher3.Launcher".equals(cur)
+                    || "com.bb_sz.auto.RunActivity".equals(cur)
+                    || "com.tencent.qlauncher.home.Launcher".equals(cur)
+                    || "com.kingroot.kinguser.activitys.SuNotifyActivity".equals(cur)) {
+            } else if ("com.kingroot.kinguser.advance.install.ui.SilentInstallDialogActivity".equals(cur)) {
+            } else {
+                doBackBtn();
+            }
+        }
+
+//        if (isOpen) {
+//            sleep(app.open_ready_time * 1000);
+//            if (phoneType == RunManager.NX511J && downTimeCount <= 5) {
+//                input(870, 1093);
+//            } else
+//                input(580, 729);
+//        }
+
+        sleep(app.w_play * 1000);
+        if (null != callback) {
+            callback.result(isInstallSuccess ? 0 : -1, isInstallSuccess ? "success" : "failed");
+        }
+        StringBuffer sb = new StringBuffer();
+        return sb.toString();
+    }
+
+    public synchronized String _searchShFile_HM_NOTE_QiHoo(final Context context, ShRunCallback callback, App app) {
+        final String needSearchPkg = app.pkg;
+        long shStartTime = System.currentTimeMillis();
+        sleep(app.before_start_sleep * 1000);
+        String[] cmds = {"am force-stop " + yybPkg,
+                "pm clear " + yybPkg,
+                "am force-stop " + qihooPkg,
+                "pm clear " + qihooPkg,
+                "pm uninstall " + needSearchPkg
+        };
+
+        CMD.doSuExec(cmds);
+        sleep(app.clear_app_sleep * 1000);
+        //清空SDcard
+        clearSD();
+        sleep(app.clear_sd_sleep * 1000);
+
+        boolean launched = false;
+        String tmp = null;
+        int count = 0;
+        while (!launched) {
+            CMD.doSuExec("am start -n " + qihooPkg + "/" + qihooLauncher + " -a android.intent.action.MAIN -c android.intent.category.LAUNCHER ");
+            sleep(app.launch_market_sleep * 1000);
+            tmp = CheckHelp.getInstance().getCurrentActivityName(context);
+            launched = tmp.contains("com.qihoo");
+            if (!launched && count >= 10) {
+                callback.result(0, "Next Phone");
+                return "";
+            }
+            L.i(TAG, "launched = " + launched + ", count = " + count++);
+        }
+
+        boolean isInstallSuccess = false;
+        String cur = null;
+        long homePageStartTimeStart = 0;
         long installPageStartTime = 0;
         long appPageStartTime = 0;
         long searchPageStartTime = 0;
         long webPageStartTime = 0;
         boolean isOpen = false;
         boolean runFlag = SP.getInstance().getBooleanValue(Contants.KEY_RUN_FLAG);
-        sendBroad(context, app.input, app.name, "SearchActivity", "GenericWordCategoryActivity", app.qh360typekey, app.qh360type, app.qh360typeindex);// 输入关键字并开始搜索
+        _sendBroad(context, app.input, app.name, "SearchActivity", "GenericWordCategoryActivity", app.qh360typekey, app.qh360type, app.qh360typeindex);// 输入关键字并开始搜索
+        sendBroad(context, app);
         final int phoneType = RunManager.getInstance().getSelPhoneType();
         int downTimeCount = 0;
         while (!isInstallSuccess && runFlag) {
@@ -176,7 +395,8 @@ public class ShHelper {
                 }
             } else if ("com.qihoo.appstore.home.MainActivity".equals(cur)) {//首页l
                 searchPageStartTime = 0;
-                sendBroad(context, app.input, app.name, "SearchActivity", "GenericWordCategoryActivity", app.qh360typekey, app.qh360type, app.qh360typeindex);// 输入关键字并开始搜索
+                _sendBroad(context, app.input, app.name, "SearchActivity", "GenericWordCategoryActivity", app.qh360typekey, app.qh360type, app.qh360typeindex);// 输入关键字并开始搜索
+                sendBroad(context, app);
                 if (homePageStartTimeStart == 0) {
                     homePageStartTimeStart = System.currentTimeMillis();
                 }
@@ -397,7 +617,8 @@ public class ShHelper {
         long searchPageStartTime = 0;
         int x, y;
         boolean runFlag = SP.getInstance().getBooleanValue(Contants.KEY_RUN_FLAG);
-        sendBroadYYB(context, app.input, app.name, "SearchActivity");// 输入关键字并开始搜索
+        _sendBroadYYB(context, app.input, app.name, "SearchActivity");// 输入关键字并开始搜索
+        sendBroad(context, app);
         while (!isInstallSuccess && runFlag) {
             sleep(300);
             runFlag = SP.getInstance().getBooleanValue(Contants.KEY_RUN_FLAG);
@@ -538,6 +759,169 @@ public class ShHelper {
                 break;
             }
             tmp = CheckHelp.getInstance().getCurrentActivityName(context);
+            if (null != ACTReceiver.success && "SKY_AUTO_RUN_SUCCESS".equals(ACTReceiver.success)) {
+                isInstallSuccess = true;
+                ACTReceiver.success = null;
+            }
+            if (null == cur || !cur.equals(tmp)) {
+                cur = tmp;
+                L.v(TAG, "cur = " + cur);
+            }
+
+            if ("com.tencent.assistantv2.activity.MainActivity".equals(cur)) {//首页
+//                _sendBroadYYB(context, app.input, app.name, "SearchActivity");// 输入关键字并开始搜索
+                sendBroad(context, app);
+//                if (homePageStartTimeStart == 0) {
+//                    homePageStartTimeStart = System.currentTimeMillis();
+//                }
+//                if (System.currentTimeMillis() - homePageStartTimeStart > app.w_main * 1000) {//
+//                    input(266, 100);//点击搜索框
+//                    homePageStartTimeStart = 0;
+//                }
+            } else if ("com.tencent.nucleus.search.SearchActivity".equals(cur)) {//搜索页面
+                if (searchPageStartTime == 0) {
+                    searchPageStartTime = System.currentTimeMillis();
+                }
+//                if (System.currentTimeMillis() - searchPageStartTime < app.w_search * 1000) {
+//                    continue;
+//                }
+//
+//                if (phoneType == RunManager.P780) {
+//                    swipe(100, 1000, 100, 10, app.swipe);
+//                } else if (phoneType == RunManager.NX511J) {
+//                    swipe(100, 1000, 100, 10, app.swipe);
+//                } else {
+//                    swipe(100, 600, 100, 10, app.swipe);
+//                }
+
+                //滚动超时， 有时候滚动过了，没找到app的时候返回前一页
+                if (System.currentTimeMillis() - searchPageStartTime > 1000 * app.swipe_time_out) {
+                    searchPageStartTime = 0;
+                    doBackBtn();
+                    doBackBtn();
+                    doBackBtn();
+                }
+            } else if ("com.tencent.pangu.activity.AppDetailActivityV5".equals(cur)) {//app 详情页面
+//                if (appPageStartTime == 0) {
+//                    appPageStartTime = System.currentTimeMillis();
+//                }
+//                if (System.currentTimeMillis() - appPageStartTime < app.w_infos * 1000) {//
+//                    continue;
+//                }
+//                input(360, 1230);//点击下载按钮
+//                //判断是wifi还移动网络
+//                ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//                NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+//                if (mNetworkInfo.getType() == 1) {// wifi
+//                } else {
+//                    input(233, 800);//点击 土豪继续下载按钮
+//                }
+//                sleep(10000);
+//                input(234, 780);//点击 暂不开启 按钮
+//                if (!TextUtils.isEmpty(app.local_name)) {
+//                    CMD.doSuExec("pm install /sdcard/TM/" + app.local_name);
+//                    sleep(5000);
+//                    // next times
+//                    isInstallSuccess = true;
+//                    home(context);
+//                }
+
+            } else if ("com.tencent.pangu.activity.InstallerListenerActivity".equals(cur)) {
+            } else if ("com.android.packageinstaller.PackageInstallerActivity".equals(cur)) {
+//                input(541, 1235);//点击 安装 按钮
+            } else if ("com.android.packageinstaller.InstallAppProgress".equals(cur)) {
+//                sleep(app.w_install * 1000);
+//                int k = new Random().nextInt(100);
+//                if (k >= app.open) {//60% open app
+//                    if (phoneType == RunManager.NX511J) {
+//                        input(807, 1823);//打开
+//                    } else
+//                        input(546, 1230);//打开
+//                } else {
+//                    if (phoneType == RunManager.NX511J) {
+//                        input(274, 1823);//完成
+//                    } else {
+//                        input(176, 1230);//完成
+//                    }
+//                }
+//                // next times
+//                isInstallSuccess = true;
+//                home(context);
+            } else if ("com.android.launcher3.Launcher".equals(cur)
+                    || "com.bb_sz.auto.RunActivity".equals(cur)
+                    || "com.tencent.assistant.activity.SplashImplActivity".equals(cur)
+                    || "com.tencent.pangu.welcome.WelcomeActivity".equals(cur)
+                    || "com.tencent.cloud.activity.GuideActivity".equals(cur)
+                    || "com.kingroot.kinguser.activitys.SuNotifyActivity".equals(cur)) {
+            } else if ("com.tencent.pangu.activity.PopUpNecessaryAcitivity".equals(cur)) {
+//                doBackBtn();
+            } else {
+//                doBackBtn();
+            }
+        }
+//        if (isOpen) {
+//            sleep(app.open_ready_time * 1000);
+//            if (phoneType == RunManager.NX511J) {
+//                input(870, 1093);
+//            } else
+//                input(580, 729);
+//        }
+        sleep(app.w_play * 1000);
+        if (null != callback) {
+            callback.result(isInstallSuccess ? 0 : -1, isInstallSuccess ? "success" : "failed");
+        }
+
+        return "";
+    }
+
+    public String _searchShFile_HM_NOTE_YYB(Context context, ShRunCallback callback, App app) {
+        if (null == app) return "";
+        final String needSearchPkg = app.pkg;
+
+        long shStartTime = System.currentTimeMillis();
+        sleep(app.before_start_sleep * 1000);
+        String[] cmds = {"am force-stop " + yybPkg,
+                "pm clear " + yybPkg,
+                "am force-stop " + qihooPkg,
+                "pm clear " + qihooPkg,
+                "pm uninstall " + needSearchPkg
+
+        };
+        CMD.doSuExec(cmds);
+        sleep(app.clear_app_sleep * 1000);
+        //清空SDcard
+        clearSD();
+        sleep(app.clear_sd_sleep * 1000);
+        boolean launched = false;
+        String tmp = null;
+        int count = 0;
+        while (!launched) {
+            CMD.doSuExec("am start -n " + yybPkg + "/" + yybLauncher + " -a android.intent.action.MAIN -c android.intent.category.LAUNCHER ");
+            sleep(app.launch_market_sleep * 1000);
+            tmp = CheckHelp.getInstance().getCurrentActivityName(context);
+            launched = tmp.contains("com.tencent");
+            if (!launched && count >= 10) {
+                callback.result(0, "Next Phone");
+                return "";
+            }
+            L.i(TAG, "launched = " + launched + ", count = " + count++);
+        }
+        boolean isInstallSuccess = false;
+        String cur = null;
+        long homePageStartTimeStart = 0;
+        long appPageStartTime = 0;
+        long searchPageStartTime = 0;
+        boolean isOpen = false;
+        boolean runFlag = SP.getInstance().getBooleanValue(Contants.KEY_RUN_FLAG);
+        final int phoneType = RunManager.getInstance().getSelPhoneType();
+        while (!isInstallSuccess && runFlag) {
+            sleep(app.run_blank);
+            runFlag = SP.getInstance().getBooleanValue(Contants.KEY_RUN_FLAG);
+            if (shStartTime > 0 && System.currentTimeMillis() - shStartTime > app.time_out * 1000) {
+                L.i(TAG, "shStartTime = " + shStartTime + ", b = " + (System.currentTimeMillis() - shStartTime));
+                break;
+            }
+            tmp = CheckHelp.getInstance().getCurrentActivityName(context);
 
             if (null == cur || !cur.equals(tmp)) {
                 cur = tmp;
@@ -545,7 +929,8 @@ public class ShHelper {
             }
 
             if ("com.tencent.assistantv2.activity.MainActivity".equals(cur)) {//首页
-                sendBroadYYB(context, app.input, app.name, "SearchActivity");// 输入关键字并开始搜索
+                _sendBroadYYB(context, app.input, app.name, "SearchActivity");// 输入关键字并开始搜索
+                sendBroad(context, app);
                 if (homePageStartTimeStart == 0) {
                     homePageStartTimeStart = System.currentTimeMillis();
                 }
@@ -704,7 +1089,8 @@ public class ShHelper {
         long searchPageStartTime = 0;
         int x, y;
         boolean runFlag = SP.getInstance().getBooleanValue(Contants.KEY_RUN_FLAG);
-        sendBroad(context, app.input, app.name, "SearchActivity", "GenericWordCategoryActivity", app.qh360typekey, app.qh360type, app.qh360typeindex);// 输入关键字并开始搜索
+        _sendBroad(context, app.input, app.name, "SearchActivity", "GenericWordCategoryActivity", app.qh360typekey, app.qh360type, app.qh360typeindex);// 输入关键字并开始搜索
+        sendBroad(context, app);
 
         while (!isInstallSuccess && runFlag) {
             sleep(250);
@@ -829,7 +1215,7 @@ public class ShHelper {
         return null;
     }
 
-    private void sendBroad(Context context, String input, String txt, String act, String act1, String key, int type, int index) {
+    private void _sendBroad(Context context, String input, String txt, String act, String act1, String key, int type, int index) {
         Intent intent = new Intent();
         intent.setAction("com.bb_sz.intent.action.sl360");
         intent.putExtra("sl360_input", input);
@@ -842,7 +1228,19 @@ public class ShHelper {
         context.sendBroadcast(intent);
     }
 
-    private void sendBroadYYB(Context context, String input, String txt, String act) {
+    private static long broadSendTime = 0;
+
+    private void sendBroad(Context context, App app) {
+        if (broadSendTime == 0 || System.currentTimeMillis() - broadSendTime > 1000 * 20) {
+            broadSendTime = System.currentTimeMillis();
+            Intent intent = new Intent("com.bb_sz.intent.action.helper");
+            intent.putExtra("msg_json", new Gson().toJson(app));
+//        Log.i(TAG, "msg_json is " + new Gson().toJson(app));
+            context.sendBroadcast(intent);
+        }
+    }
+
+    private void _sendBroadYYB(Context context, String input, String txt, String act) {
         Intent intent = new Intent();
         intent.setAction("com.bb_sz.intent.action.slyyb");
         intent.putExtra("slyyb_input", input);

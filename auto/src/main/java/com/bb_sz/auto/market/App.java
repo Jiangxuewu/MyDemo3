@@ -8,6 +8,7 @@ public class App {
     public int m_type;// 0->360; 1->yyb
     public String pkg;
     public String name;
+    public String app_name;
     public String launcher;
     public int open;
     public String input;
@@ -64,6 +65,7 @@ public class App {
         sb.append("qh360typeindex").append(":").append(qh360typeindex).append("\n");
         sb.append("local_name").append(":").append(local_name).append("\n");
         sb.append("down_times").append(":").append(down_times).append("\n");
+        sb.append("app_name").append(":").append(app_name).append("\n");
         sb.append("}");
         return sb.toString();
     }
